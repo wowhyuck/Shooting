@@ -4,6 +4,7 @@
 #include "ShootingCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AShootingCharacter::AShootingCharacter()
@@ -13,12 +14,15 @@ AShootingCharacter::AShootingCharacter()
 	// 카메라 세팅
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetMesh());
-	CameraBoom->TargetArmLength = 600;
+	CameraBoom->TargetArmLength = 600.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	bUseControllerRotationYaw = false;		// 컨트롤러 회전에 따라 캐릭터 회전 여부
+	GetCharacterMovement()->bOrientRotationToMovement = true;		// 캐릭터 이동방향에 따라 캐릭터 회전 여부
 }
 
 void AShootingCharacter::BeginPlay()
