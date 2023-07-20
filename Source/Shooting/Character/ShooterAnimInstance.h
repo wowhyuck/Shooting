@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "ShootingAnimInstance.generated.h"
+#include "ShooterAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHOOTING_API UShootingAnimInstance : public UAnimInstance
+class SHOOTING_API UShooterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 	
@@ -20,7 +20,7 @@ public:
 
 private:
 	UPROPERTY(BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
-	class AShootingCharacter* ShootingCharacter;
+	class AShooterCharacter* ShooterCharacter;
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float Speed;
@@ -30,5 +30,4 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsAccelerating;
-
 };

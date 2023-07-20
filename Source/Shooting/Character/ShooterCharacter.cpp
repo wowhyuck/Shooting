@@ -1,13 +1,13 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ShootingCharacter.h"
+#include "ShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-AShootingCharacter::AShootingCharacter()
+AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -25,26 +25,26 @@ AShootingCharacter::AShootingCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;		// 캐릭터 이동방향에 따라 캐릭터 회전 여부
 }
 
-void AShootingCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void AShootingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
 	// 캐릭터 이동 & 회전 입력키 바인딩
-	PlayerInputComponent->BindAxis("MoveForward", this, &AShootingCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AShootingCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &AShootingCharacter::LookUp);
-	PlayerInputComponent->BindAxis("Turn", this, &AShootingCharacter::Turn);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::LookUp);
+	PlayerInputComponent->BindAxis("Turn", this, &AShooterCharacter::Turn);
 }
 
-void AShootingCharacter::MoveForward(float Value)
+void AShooterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+void AShooterCharacter::MoveForward(float Value)
 {
 	if (Controller != nullptr && Value != 0.f)
 	{
@@ -54,7 +54,7 @@ void AShootingCharacter::MoveForward(float Value)
 	}
 }
 
-void AShootingCharacter::MoveRight(float Value)
+void AShooterCharacter::MoveRight(float Value)
 {
 	if (Controller != nullptr && Value != 0.f)
 	{
@@ -64,17 +64,17 @@ void AShootingCharacter::MoveRight(float Value)
 	}
 }
 
-void AShootingCharacter::Turn(float Value)
+void AShooterCharacter::Turn(float Value)
 {
 	AddControllerYawInput(Value);
 }
 
-void AShootingCharacter::LookUp(float Value)
+void AShooterCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
 }
 
-void AShootingCharacter::Tick(float DeltaTime)
+void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

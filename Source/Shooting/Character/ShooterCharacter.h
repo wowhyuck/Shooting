@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "ShootingCharacter.generated.h"
+#include "ShooterCharacter.generated.h"
 
 UCLASS()
-class SHOOTING_API AShootingCharacter : public ACharacter
+class SHOOTING_API AShooterCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AShootingCharacter();
+	AShooterCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
