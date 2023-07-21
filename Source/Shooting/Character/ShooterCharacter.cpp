@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Shooting/ShooterComponents/CombatComponent.h"
 
 
 AShooterCharacter::AShooterCharacter()
@@ -23,6 +24,8 @@ AShooterCharacter::AShooterCharacter()
 
 	bUseControllerRotationYaw = false;		// 컨트롤러 회전에 따라 캐릭터 회전 여부
 	GetCharacterMovement()->bOrientRotationToMovement = true;		// 캐릭터 이동방향에 따라 캐릭터 회전 여부
+
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));	
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -36,6 +39,16 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::LookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &AShooterCharacter::Turn);
+}
+
+void AShooterCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (Combat)
+	{
+		Combat->Character = this;
+	}
 }
 
 void AShooterCharacter::BeginPlay()

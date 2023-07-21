@@ -3,6 +3,7 @@
 
 #include "Weapon.h"
 
+
 AWeapon::AWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -27,4 +28,3 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
