@@ -37,5 +37,5 @@ private:
 	class UCombatComponent* Combat;
 
 public:	
-
+	bool IsWeaponEquipped();
 };

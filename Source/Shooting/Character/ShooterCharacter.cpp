@@ -87,6 +87,11 @@ void AShooterCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+bool AShooterCharacter::IsWeaponEquipped()
+{
+	return (Combat && Combat->EquippedWeapon);
+}
+
 void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

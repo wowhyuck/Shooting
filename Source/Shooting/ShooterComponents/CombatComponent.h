@@ -25,6 +25,7 @@ protected:
 	
 private:
 	class AShooterCharacter* Character;
+
 	AWeapon* EquippedWeapon;
 
 public:	
