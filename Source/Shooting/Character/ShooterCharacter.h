@@ -25,6 +25,8 @@ protected:
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
+	void AimButtonPressed();
+	void AimButtonReleased();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -38,4 +40,5 @@ private:
 
 public:	
 	bool IsWeaponEquipped();
+	bool IsAiming();
 };

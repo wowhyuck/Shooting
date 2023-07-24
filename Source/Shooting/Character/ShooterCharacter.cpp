@@ -33,6 +33,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AShooterCharacter::AimButtonPressed);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AShooterCharacter::AimButtonReleased);
 
 	// 캐릭터 이동 & 회전 입력키 바인딩
 	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
@@ -87,9 +89,30 @@ void AShooterCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+void AShooterCharacter::AimButtonPressed()
+{
+	if (Combat)
+	{
+		Combat->bAiming = true;
+	}
+}
+
+void AShooterCharacter::AimButtonReleased()
+{
+	if (Combat)
+	{
+		Combat->bAiming = false;
+	}
+}
+
 bool AShooterCharacter::IsWeaponEquipped()
 {
 	return (Combat && Combat->EquippedWeapon);
+}
+
+bool AShooterCharacter::IsAiming()
+{
+	return (Combat && Combat->bAiming);
 }
 
 void AShooterCharacter::Tick(float DeltaTime)

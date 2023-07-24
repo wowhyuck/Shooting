@@ -28,6 +28,8 @@ private:
 
 	AWeapon* EquippedWeapon;
 
+	bool bAiming;
+
 public:	
 
 		
