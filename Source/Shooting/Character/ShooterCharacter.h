@@ -38,6 +38,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UCombatComponent* Combat;
 
+
+	/* ---------------- Test1 ---------------- */
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	class AWeapon* StartWeapon;
+	/* --------------------------------------- */
+
 public:	
 	bool IsWeaponEquipped();
 	bool IsAiming();

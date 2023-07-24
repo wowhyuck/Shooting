@@ -7,6 +7,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Shooting/ShooterComponents/CombatComponent.h"
 
+/* ---------------- Test1 ---------------- */
+#include "Shooting/Weapon/Weapon.h"
+/* --------------------------------------- */
+
+
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -57,6 +62,10 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	/* ---------------- Test1 ---------------- */
+	Combat->EquipWeapon(StartWeapon);
+	/* --------------------------------------- */
+
 }
 
 void AShooterCharacter::MoveForward(float Value)
