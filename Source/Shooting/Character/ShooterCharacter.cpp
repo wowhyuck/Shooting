@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Shooting/ShooterComponents/CombatComponent.h"
+#include "Components/CapsuleComponent.h"
 
 /* ---------------- Test1 ---------------- */
 #include "Shooting/Weapon/Weapon.h"
@@ -31,6 +32,9 @@ AShooterCharacter::AShooterCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;		// 캐릭터 이동방향에 따라 캐릭터 회전 여부
 
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));	
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -102,7 +106,7 @@ void AShooterCharacter::AimButtonPressed()
 {
 	if (Combat)
 	{
-		Combat->bAiming = true;
+		Combat->SetAiming(true);
 	}
 }
 
@@ -110,7 +114,7 @@ void AShooterCharacter::AimButtonReleased()
 {
 	if (Combat)
 	{
-		Combat->bAiming = false;
+		Combat->SetAiming(false);
 	}
 }
 

@@ -19,7 +19,7 @@ public:
 	friend class AShooterCharacter;
 
 	void EquipWeapon(class AWeapon* WeaponToEquip);
-
+	void SetAiming(bool bIsAiming);
 protected:
 	virtual void BeginPlay() override;
 	
@@ -29,6 +29,12 @@ private:
 	AWeapon* EquippedWeapon;
 
 	bool bAiming;
+
+	UPROPERTY(EditAnywhere)
+	float BaseWalkSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float AimWalkSpeed;
 
 public:	
 
