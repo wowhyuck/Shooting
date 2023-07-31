@@ -34,6 +34,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	bWeaponEquipped = ShooterCharacter->IsWeaponEquipped();
 	EquippedWeapon = ShooterCharacter->GetEquippedWeapon();
 	bAiming = ShooterCharacter->IsAiming();
+	TurningInPlace = ShooterCharacter->GetTurningInPlace();
 
 	FRotator AimRotation = ShooterCharacter->GetBaseAimRotation();
 	FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(ShooterCharacter->GetVelocity());
