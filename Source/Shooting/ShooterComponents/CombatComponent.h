@@ -23,6 +23,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	void FireButtonPressed(bool bPressed);
+
 private:
 	class AShooterCharacter* Character;
 
@@ -35,6 +37,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float AimWalkSpeed;
+
+	bool bFireButtonPressed;
 
 public:	
 
