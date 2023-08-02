@@ -70,7 +70,7 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	/* ---------------- Test1 ---------------- */
-	Combat->EquipWeapon(StartWeapon);
+	//Combat->EquipWeapon(StartWeapon);
 	/* --------------------------------------- */
 
 }
