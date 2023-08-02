@@ -2,6 +2,8 @@
 
 
 #include "Weapon.h"
+#include "Animation/AnimationAsset.h"
+#include "Components/SkeletalMeshComponent.h"
 
 
 AWeapon::AWeapon()
@@ -21,6 +23,11 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AWeapon::Fire()
+{
+	WeaponMesh->PlayAnimation(FireAnimation, false);
 }
 
 void AWeapon::Tick(float DeltaTime)

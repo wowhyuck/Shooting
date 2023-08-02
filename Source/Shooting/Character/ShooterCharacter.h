@@ -55,7 +55,7 @@ private:
 	class UAnimMontage* FireWeaponMontage;
 
 	/* ---------------- Test1 ---------------- */
-	UPROPERTY(EditAnywhere, Category = Weapon)
+	UPROPERTY(EditAnywhere)
 	class AWeapon* StartWeapon;
 	/* --------------------------------------- */
 
