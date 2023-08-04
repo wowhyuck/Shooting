@@ -25,6 +25,8 @@ protected:
 	
 	void FireButtonPressed(bool bPressed);
 
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
+
 private:
 	class AShooterCharacter* Character;
 
