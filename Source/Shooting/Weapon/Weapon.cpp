@@ -25,7 +25,7 @@ void AWeapon::BeginPlay()
 	
 }
 
-void AWeapon::Fire()
+void AWeapon::Fire(const FVector& HitTarget)
 {
 	WeaponMesh->PlayAnimation(FireAnimation, false);
 }
