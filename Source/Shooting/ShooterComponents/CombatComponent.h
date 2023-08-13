@@ -51,6 +51,8 @@ private:
 	// HUD and Crosshairs
 	float CrosshairVelocityFactor;
 	float CrosshairInAirFactor;
+	float CrosshairAimFactor;
+	float CrosshairShootingFactor;
 
 	/* 조준 및 FOV */
 	// 조준이 아닐 때 FOV(Field Of View), 시작할 때 카메라 기본 FOV 설정하기
