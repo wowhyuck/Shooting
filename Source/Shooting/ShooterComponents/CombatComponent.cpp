@@ -10,6 +10,7 @@
 #include "Shooting/PlayerController/ShooterPlayerController.h"
 #include "Shooting/HUD/ShooterHUD.h"
 #include "Camera/CameraComponent.h"
+#include "TimerManager.h"
 
 #define TRACE_LENGTH 80000.f
 
@@ -59,13 +60,23 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 	if (EquippedWeapon == nullptr) return;
 	if (Character && bFireButtonPressed)
 	{
+		Fire();
+	}
+}
+
+void UCombatComponent::Fire()
+{
+	if (bCanFire)
+	{
 		Character->PlayFireMontage(bAiming);
 		EquippedWeapon->Fire(HitTarget);
 
+		bCanFire = false;
 		if (EquippedWeapon)
 		{
 			CrosshairShootingFactor = 0.75f;
 		}
+		StartFireTimer();
 	}
 }
 
@@ -205,6 +216,26 @@ void UCombatComponent::InterpFOV(float DeltaTime)
 	if (Character && Character->GetFollowCamera())
 	{
 		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
+	}
+}
+
+void UCombatComponent::StartFireTimer()
+{
+	if (EquippedWeapon == nullptr || Character == nullptr) return;
+
+	Character->GetWorldTimerManager().SetTimer(
+		FireTimer,
+		this,
+		&UCombatComponent::FireTimerFinished,
+		FireDelay);
+}
+
+void UCombatComponent::FireTimerFinished()
+{
+	bCanFire = true;
+	if (bFireButtonPressed && bAutomatic)
+	{
+		Fire();
 	}
 }
 

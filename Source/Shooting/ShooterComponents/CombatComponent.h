@@ -20,6 +20,7 @@ public:
 
 	void EquipWeapon(class AWeapon* WeaponToEquip);
 	void SetAiming(bool bIsAiming);
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -67,6 +68,21 @@ private:
 	float ZoomInterpSpeed = 20.f;
 
 	void InterpFOV(float DeltaTime);
+
+	/* 자동 연사 */
+	FTimerHandle FireTimer;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float FireDelay = 0.15f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	bool bAutomatic = true;
+
+	bool bCanFire = true;
+
+	void StartFireTimer();
+	void FireTimerFinished();
+	void Fire();
 
 public:	
 
