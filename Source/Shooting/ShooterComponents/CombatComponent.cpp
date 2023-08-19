@@ -227,13 +227,15 @@ void UCombatComponent::StartFireTimer()
 		FireTimer,
 		this,
 		&UCombatComponent::FireTimerFinished,
-		FireDelay);
+		EquippedWeapon->FireDelay);
 }
 
 void UCombatComponent::FireTimerFinished()
 {
+	if (EquippedWeapon == nullptr) return;
+
 	bCanFire = true;
-	if (bFireButtonPressed && bAutomatic)
+	if (bFireButtonPressed && EquippedWeapon->bAutomatic)
 	{
 		Fire();
 	}
