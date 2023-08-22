@@ -58,6 +58,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* HitReactMontage;
 
+	/* 플레이어 체력 */
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	float MaxHealth = 100.f;
+
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	float Health = 100.f;
+
+
 	/* ---------------- Test1 ---------------- */
 	UPROPERTY(EditAnywhere)
 	class AWeapon* StartWeapon;

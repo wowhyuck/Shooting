@@ -31,8 +31,16 @@ class SHOOTING_API AShooterHUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	TSubclassOf<class UUserWidget> CharacterOverlayClass;
+
+	class UCharacterOverlay* CharacterOverlay;
+
 protected:
 	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread);
+
+	virtual void BeginPlay() override;
+	void AddCharacterOverlay();
 
 private:
 	FHUDPackage HUDPackage;
