@@ -65,6 +65,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float Health = 100.f;
 
+	class AShooterPlayerController* ShooterPlayerController;
 
 	/* ---------------- Test1 ---------------- */
 	UPROPERTY(EditAnywhere)

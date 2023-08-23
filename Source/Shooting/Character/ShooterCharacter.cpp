@@ -10,6 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "ShooterAnimInstance.h"
 #include "Shooting/Shooting.h"
+#include "Shooting/PlayerController/ShooterPlayerController.h"
 
 /* ---------------- Test1 ---------------- */
 #include "Shooting/Weapon/Weapon.h"
@@ -101,6 +102,12 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ShooterPlayerController = Cast<AShooterPlayerController>(Controller);
+	if (ShooterPlayerController)
+	{
+		ShooterPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
+
 	/* ---------------- Test1 ---------------- */
 	Combat->EquipWeapon(StartWeapon);
 	/* --------------------------------------- */
