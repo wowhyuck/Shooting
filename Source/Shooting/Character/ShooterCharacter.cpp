@@ -102,11 +102,8 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	ShooterPlayerController = Cast<AShooterPlayerController>(Controller);
-	if (ShooterPlayerController)
-	{
-		ShooterPlayerController->SetHUDHealth(Health, MaxHealth);
-	}
+	UpdateHUDHealth();
+	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);
 
 	/* ---------------- Test1 ---------------- */
 	Combat->EquipWeapon(StartWeapon);
@@ -211,6 +208,23 @@ void AShooterCharacter::FireButtonReleased()
 	if (Combat)
 	{
 		Combat->FireButtonPressed(false);
+	}
+}
+
+void AShooterCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
+{
+	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
+	UpdateHUDHealth();
+	PlayHitReactMontage();
+}
+
+void AShooterCharacter::UpdateHUDHealth()
+{
+	ShooterPlayerController = ShooterPlayerController == nullptr ? Cast<AShooterPlayerController>(Controller) : ShooterPlayerController;
+	
+	if (ShooterPlayerController)
+	{
+		ShooterPlayerController->SetHUDHealth(Health, MaxHealth);
 	}
 }
 
