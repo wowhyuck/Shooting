@@ -72,8 +72,10 @@ private:
 	class AShooterPlayerController* ShooterPlayerController;
 
 	/* ---------------- Test1 ---------------- */
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere, Category = "Player Weapon")
 	class AWeapon* StartWeapon;
+
 	/* --------------------------------------- */
 
 public:	
@@ -85,4 +87,6 @@ public:
 	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 	FVector GetHitTarget() const;
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE float GetHealth() const { return Health; }
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 }; 
