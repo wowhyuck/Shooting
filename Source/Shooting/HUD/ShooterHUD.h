@@ -36,11 +36,12 @@ public:
 
 	class UCharacterOverlay* CharacterOverlay;
 
+	void AddCharacterOverlay();
+
 protected:
 	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread);
 
 	virtual void BeginPlay() override;
-	void AddCharacterOverlay();
 
 private:
 	FHUDPackage HUDPackage;

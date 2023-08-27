@@ -14,4 +14,6 @@ class SHOOTING_API AShootingGameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+public:
+
 };

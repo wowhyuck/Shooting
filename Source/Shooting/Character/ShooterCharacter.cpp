@@ -101,11 +101,12 @@ void AShooterCharacter::PlayHitReactMontage()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	UpdateHUDHealth();
 	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);
 
 	/* ---------------- Test1 ---------------- */
+
 	Combat->EquipWeapon(StartWeapon);
 	/* --------------------------------------- */
 

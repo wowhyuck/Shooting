@@ -19,6 +19,7 @@ public:
 	friend class AShooterCharacter;
 
 	void EquipWeapon(class AWeapon* WeaponToEquip);
+
 	void SetAiming(bool bIsAiming);
 
 protected:
