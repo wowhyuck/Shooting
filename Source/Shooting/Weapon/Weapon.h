@@ -25,6 +25,7 @@ public:
 	AWeapon();
 	virtual void Tick(float DeltaTime) override;
 	virtual void Fire(const FVector& HitTarget);
+	void SetHUDAmmo();
 
 	/* 무기 조준점의 텍스처 변수 */
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
@@ -71,6 +72,20 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ACasing> CasingClass;
+
+	UPROPERTY(EditAnywhere)
+	int32 Ammo;
+
+	void SpendRound();
+
+	UPROPERTY(EditAnywhere)
+	int32 MagCapacity;
+
+	UPROPERTY()
+	class AShooterCharacter* ShooterOwnerCharacter;
+
+	UPROPERTY()
+	class AShooterPlayerController* ShooterOwnerController;
 
 public:	
 	FORCEINLINE void SetWeaponState(EWeaponState State) { WeaponState = State; }

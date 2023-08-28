@@ -16,6 +16,7 @@ class SHOOTING_API AShooterPlayerController : public APlayerController
 	
 public:
 	void SetHUDHealth(float Health, float MaxHealth);
+	void SetHUDWeaponAmmo(int32 Ammo);
 	virtual void OnPossess(APawn* InPawn) override;
 
 protected:

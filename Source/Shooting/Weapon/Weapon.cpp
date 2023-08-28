@@ -6,6 +6,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Casing.h"
+#include "Shooting/PlayerController/ShooterPlayerController.h"
+#include "Shooting/Character/ShooterCharacter.h"
 
 
 AWeapon::AWeapon()
@@ -25,6 +27,25 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AWeapon::SetHUDAmmo()
+{
+	ShooterOwnerCharacter = ShooterOwnerCharacter == nullptr ? Cast<AShooterCharacter>(GetOwner()) : ShooterOwnerCharacter;
+	if (ShooterOwnerCharacter)
+	{
+		ShooterOwnerController = ShooterOwnerController == nullptr ? Cast<AShooterPlayerController>(ShooterOwnerCharacter->Controller) : ShooterOwnerController;
+		if (ShooterOwnerController)
+		{
+			ShooterOwnerController->SetHUDWeaponAmmo(Ammo);
+		}
+	}
+}
+
+void AWeapon::SpendRound()
+{
+	--Ammo;
+	SetHUDAmmo();
 }
 
 void AWeapon::Fire(const FVector& HitTarget)
@@ -50,6 +71,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 			}
 		}
 	}
+	SpendRound();
 }
 
 void AWeapon::Tick(float DeltaTime)
