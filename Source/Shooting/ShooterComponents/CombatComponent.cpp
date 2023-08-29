@@ -66,7 +66,7 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 
 void UCombatComponent::Fire()
 {
-	if (bCanFire)
+	if (CanFire())
 	{
 		Character->PlayFireMontage(bAiming);
 		EquippedWeapon->Fire(HitTarget);
@@ -78,6 +78,12 @@ void UCombatComponent::Fire()
 		}
 		StartFireTimer();
 	}
+}
+
+bool UCombatComponent::CanFire()
+{
+	if (EquippedWeapon == nullptr) return false;
+	return !EquippedWeapon->IsEmpty() || !bCanFire;
 }
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
