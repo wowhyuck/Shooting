@@ -275,7 +275,8 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 
 void UCombatComponent::Reload()
 {
-	if (Character == nullptr) return;
+	if (Character == nullptr || EquippedWeapon == nullptr) return;
+	if (EquippedWeapon->GetAmmo() == EquippedWeapon->GetMagCapacity()) return;
 
 	if (CombatState != ECombatState::ECS_Reloading)
 	{
@@ -289,6 +290,9 @@ void UCombatComponent::FinishReloading()
 	if (Character == nullptr) return;
 	
 	CombatState = ECombatState::ECS_Unoccupied;
+
+	EquippedWeapon->SetAmmo(EquippedWeapon->GetMagCapacity());
+	EquippedWeapon->SetHUDAmmo();
 
 	if (bFireButtonPressed)
 	{
