@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Shooting/ShootingTypes/CombatState.h"
 #include "CombatComponent.generated.h"
 
 class AWeapon;
@@ -21,6 +22,11 @@ public:
 	void EquipWeapon(class AWeapon* WeaponToEquip);
 
 	void SetAiming(bool bIsAiming);
+
+	void Reload();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
 
 protected:
 	virtual void BeginPlay() override;
@@ -80,6 +86,8 @@ private:
 	void Fire();
 
 	bool CanFire();
+
+	ECombatState CombatState = ECombatState::ECS_Unoccupied;
 
 public:	
 

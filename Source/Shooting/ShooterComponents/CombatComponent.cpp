@@ -273,3 +273,21 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 	}
 }
 
+void UCombatComponent::Reload()
+{
+	if (Character == nullptr) return;
+
+	if (CombatState != ECombatState::ECS_Reloading)
+	{
+		CombatState = ECombatState::ECS_Reloading;
+		Character->PlayReloadMontage();
+	}
+}
+
+void UCombatComponent::FinishReloading()
+{
+	if (Character == nullptr) return;
+	
+	CombatState = ECombatState::ECS_Unoccupied;
+}
+
