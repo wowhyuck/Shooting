@@ -58,7 +58,7 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 	bFireButtonPressed = bPressed;
 
 	if (EquippedWeapon == nullptr) return;
-	if (Character && bFireButtonPressed)
+	if (Character && bFireButtonPressed && CombatState == ECombatState::ECS_Unoccupied)
 	{
 		Fire();
 	}
@@ -83,7 +83,7 @@ void UCombatComponent::Fire()
 bool UCombatComponent::CanFire()
 {
 	if (EquippedWeapon == nullptr) return false;
-	return !EquippedWeapon->IsEmpty() || !bCanFire;
+	return !EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Unoccupied;
 }
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
@@ -289,5 +289,10 @@ void UCombatComponent::FinishReloading()
 	if (Character == nullptr) return;
 	
 	CombatState = ECombatState::ECS_Unoccupied;
+
+	if (bFireButtonPressed)
+	{
+		Fire();
+	}
 }
 
