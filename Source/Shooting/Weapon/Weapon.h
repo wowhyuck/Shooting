@@ -104,4 +104,5 @@ public:
 	FORCEINLINE int32 GetAmmo() const { return Ammo; }
 	FORCEINLINE void SetAmmo(int32 AmmoAmount) { Ammo = AmmoAmount; }
 	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
+	FORCEINLINE bool IsEmpty() const { return Ammo == 0; }
 };
