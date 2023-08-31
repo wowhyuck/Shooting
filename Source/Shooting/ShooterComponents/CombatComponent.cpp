@@ -212,14 +212,19 @@ void UCombatComponent::InterpFOV(float DeltaTime)
 {
 	if (EquippedWeapon == nullptr) return;
 
-	if (bAiming)
+	if (bAiming && CombatState != ECombatState::ECS_Reloading)
 	{
 		CurrentFOV = FMath::FInterpTo(CurrentFOV, EquippedWeapon->GetZoomedFOV(), DeltaTime, EquippedWeapon->GetZoomInterpSpeed());
+	
+		Character->GetCharacterMovement()->MaxWalkSpeed = AimWalkSpeed;
 	}
 	else
 	{
 		CurrentFOV = FMath::FInterpTo(CurrentFOV, DefaultFOV, DeltaTime, ZoomInterpSpeed);
+
+		Character->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	}
+
 	if (Character && Character->GetFollowCamera())
 	{
 		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
@@ -286,10 +291,6 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 void UCombatComponent::SetAiming(bool bIsAiming)
 {
 	bAiming = bIsAiming;
-	if (Character)
-	{
-		Character->GetCharacterMovement()->MaxWalkSpeed = bAiming ? AimWalkSpeed : BaseWalkSpeed;
-	}
 }
 
 void UCombatComponent::Reload()
