@@ -16,6 +16,25 @@ void AShooterPlayerController::BeginPlay()
 	ShooterHUD = Cast<AShooterHUD>(GetHUD());
 }
 
+void AShooterPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	SetHUDTime();
+}
+
+void AShooterPlayerController::SetHUDTime()
+{
+	uint32 SecondsLeft = FMath::CeilToInt(RoundTime - GetWorld()->GetTimeSeconds());
+
+	if (CountdownInt != SecondsLeft)
+	{
+		SetHUDRoundCountdown(RoundTime - GetWorld()->GetTimeSeconds());
+	}
+
+	CountdownInt = SecondsLeft;
+}
+
 void AShooterPlayerController::SetHUDHealth(float Health, float MaxHealth)
 {
 	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
@@ -45,6 +64,24 @@ void AShooterPlayerController::SetHUDWeaponAmmo(int32 Ammo)
 		FString AmmoAmountText = FString::Printf(TEXT("%d"), Ammo);
 		ShooterHUD->CharacterOverlay->WeaponAmmoAmount->SetText(FText::FromString(AmmoAmountText));
 	}
+}
+
+void AShooterPlayerController::SetHUDRoundCountdown(float CountdownTime)
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+
+	bool bHUDValid = ShooterHUD &&
+		ShooterHUD->CharacterOverlay &&
+		ShooterHUD->CharacterOverlay->RoundCountdownText;
+	if (bHUDValid)
+	{
+		int32 Minutes = FMath::FloorToInt(CountdownTime / 60.f);
+		int32 Seconds = CountdownTime - Minutes * 60;
+
+		FString CountdownText = FString::Printf(TEXT("%02d : %02d"), Minutes, Seconds);
+		ShooterHUD->CharacterOverlay->RoundCountdownText->SetText(FText::FromString(CountdownText));
+	}
+
 }
 
 void AShooterPlayerController::OnPossess(APawn* InPawn)

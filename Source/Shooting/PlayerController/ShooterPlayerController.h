@@ -17,14 +17,17 @@ class SHOOTING_API AShooterPlayerController : public APlayerController
 public:
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDWeaponAmmo(int32 Ammo);
+	void SetHUDRoundCountdown(float CountdownTime);
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
+	void SetHUDTime();
 
 private:
 	class AShooterHUD* ShooterHUD;
 
-public:
-	
+	float RoundTime = 120.f;
+	uint32 CountdownInt = 0;
 };
