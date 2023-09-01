@@ -15,5 +15,18 @@ class SHOOTING_API AShootingGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
+	AShootingGameMode();
 
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly)
+	float WarmupTime = 10.f;
+
+	float LevelStartingTime = 0.f;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	float CountdownTime = 0.f;
 };
