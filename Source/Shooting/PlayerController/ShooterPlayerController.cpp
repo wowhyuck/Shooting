@@ -4,6 +4,7 @@
 #include "ShooterPlayerController.h"
 #include "Shooting/HUD/ShooterHUD.h"
 #include "Shooting/HUD/CharacterOverlay.h"
+#include "Shooting/HUD/Announcement.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Shooting/Character/ShooterCharacter.h"
@@ -15,6 +16,10 @@ void AShooterPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	ShooterHUD = Cast<AShooterHUD>(GetHUD());
+	if (ShooterHUD)
+	{
+		ShooterHUD->AddAnnouncement();
+	}
 }
 
 void AShooterPlayerController::Tick(float DeltaTime)
@@ -96,14 +101,14 @@ void AShooterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 
 	bool bHUDValid = ShooterHUD &&
 		ShooterHUD->CharacterOverlay &&
-		ShooterHUD->CharacterOverlay->RoundCountdownText;
+		ShooterHUD->CharacterOverlay->MatchCountdownText;
 	if (bHUDValid)
 	{
 		int32 Minutes = FMath::FloorToInt(CountdownTime / 60.f);
 		int32 Seconds = CountdownTime - Minutes * 60;
 
 		FString CountdownText = FString::Printf(TEXT("%02d : %02d"), Minutes, Seconds);
-		ShooterHUD->CharacterOverlay->RoundCountdownText->SetText(FText::FromString(CountdownText));
+		ShooterHUD->CharacterOverlay->MatchCountdownText->SetText(FText::FromString(CountdownText));
 	}
 
 }
@@ -125,10 +130,19 @@ void AShooterPlayerController::OnMatchStateSet(FName State)
 
 	if (MatchState == MatchState::InProgress)
 	{
-		ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
-		if (ShooterHUD)
+		HandleMatchStarted();
+	}
+}
+
+void AShooterPlayerController::HandleMatchStarted()
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+	if (ShooterHUD)
+	{
+		ShooterHUD->AddCharacterOverlay();
+		if (ShooterHUD->Announcement)
 		{
-			ShooterHUD->AddCharacterOverlay();
+			ShooterHUD->Announcement->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }

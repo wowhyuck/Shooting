@@ -22,6 +22,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void OnMatchStateSet(FName State);
+	void HandleMatchStarted();
 
 protected:
 	virtual void BeginPlay() override;

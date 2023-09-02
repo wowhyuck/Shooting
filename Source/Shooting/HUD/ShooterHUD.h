@@ -39,6 +39,14 @@ public:
 
 	void AddCharacterOverlay();
 
+	UPROPERTY(EditAnywhere, Category = "Announcement")
+	TSubclassOf<UUserWidget> AnnouncementClass;
+
+	UPROPERTY()
+	class UAnnouncement* Announcement;
+
+	void AddAnnouncement();
+
 protected:
 	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread);
 
