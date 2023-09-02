@@ -17,17 +17,31 @@ class SHOOTING_API AShooterPlayerController : public APlayerController
 public:
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDWeaponAmmo(int32 Ammo);
-	void SetHUDRoundCountdown(float CountdownTime);
+	void SetHUDMatchCountdown(float CountdownTime);
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void Tick(float DeltaTime) override;
+
+	void OnMatchStateSet(FName State);
 
 protected:
 	virtual void BeginPlay() override;
 	void SetHUDTime();
 
+	void PollInt();
+
 private:
 	class AShooterHUD* ShooterHUD;
 
-	float RoundTime = 120.f;
+	float MatchTime = 120.f;
 	uint32 CountdownInt = 0;
+
+	FName MatchState;
+
+	UPROPERTY()
+	class UCharacterOverlay* CharacterOverlay;
+	bool bInitializeCharacterOverlay = false;
+
+	float HUDHealth;
+	float HUDMaxHealth;
+
 };

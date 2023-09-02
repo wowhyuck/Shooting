@@ -7,6 +7,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/GameMode/ShootingGameMode.h"
 
 
 void AShooterPlayerController::BeginPlay()
@@ -21,18 +22,35 @@ void AShooterPlayerController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	SetHUDTime();
+
+	PollInt();
 }
 
 void AShooterPlayerController::SetHUDTime()
 {
-	uint32 SecondsLeft = FMath::CeilToInt(RoundTime - GetWorld()->GetTimeSeconds());
+	uint32 SecondsLeft = FMath::CeilToInt(MatchTime - GetWorld()->GetTimeSeconds());
 
 	if (CountdownInt != SecondsLeft)
 	{
-		SetHUDRoundCountdown(RoundTime - GetWorld()->GetTimeSeconds());
+		SetHUDMatchCountdown(MatchTime - GetWorld()->GetTimeSeconds());
 	}
 
 	CountdownInt = SecondsLeft;
+}
+
+void AShooterPlayerController::PollInt()
+{
+	if (CharacterOverlay == nullptr)
+	{
+		if (ShooterHUD && ShooterHUD->CharacterOverlay)
+		{
+			CharacterOverlay = ShooterHUD->CharacterOverlay;
+			if (CharacterOverlay)
+			{
+				SetHUDHealth(HUDHealth, HUDMaxHealth);
+			}
+		}
+	}
 }
 
 void AShooterPlayerController::SetHUDHealth(float Health, float MaxHealth)
@@ -50,6 +68,12 @@ void AShooterPlayerController::SetHUDHealth(float Health, float MaxHealth)
 		FString HealthText = FString::Printf(TEXT("%d / %d"), FMath::CeilToInt(Health), FMath::CeilToInt(MaxHealth));
 		ShooterHUD->CharacterOverlay->HealthText->SetText(FText::FromString(HealthText));
 	}
+	else
+	{
+		bInitializeCharacterOverlay = true;
+		HUDHealth = Health;
+		HUDMaxHealth = MaxHealth;
+	}
 }
 
 void AShooterPlayerController::SetHUDWeaponAmmo(int32 Ammo)
@@ -66,7 +90,7 @@ void AShooterPlayerController::SetHUDWeaponAmmo(int32 Ammo)
 	}
 }
 
-void AShooterPlayerController::SetHUDRoundCountdown(float CountdownTime)
+void AShooterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 {
 	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
 
@@ -92,5 +116,19 @@ void AShooterPlayerController::OnPossess(APawn* InPawn)
 	if (ShooterCharacter)
 	{
 		SetHUDHealth(ShooterCharacter->GetHealth(), ShooterCharacter->GetMaxHealth());
+	}
+}
+
+void AShooterPlayerController::OnMatchStateSet(FName State)
+{
+	MatchState = State;
+
+	if (MatchState == MatchState::InProgress)
+	{
+		ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+		if (ShooterHUD)
+		{
+			ShooterHUD->AddCharacterOverlay();
+		}
 	}
 }

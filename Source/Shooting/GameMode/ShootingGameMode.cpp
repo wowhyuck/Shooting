@@ -2,6 +2,7 @@
 
 
 #include "ShootingGameMode.h"
+#include "Shooting/PlayerController/ShooterPlayerController.h"
 
 
 AShootingGameMode::AShootingGameMode()
@@ -30,3 +31,13 @@ void AShootingGameMode::Tick(float DeltaTime)
 	}
 }
 
+void AShootingGameMode::OnMatchStateSet()
+{
+	Super::OnMatchStateSet();
+
+	AShooterPlayerController* ShooterPlayer = Cast<AShooterPlayerController>(*(GetWorld()->GetPlayerControllerIterator()));
+	if (ShooterPlayer)
+	{
+		ShooterPlayer->OnMatchStateSet(MatchState);
+	}
+}
