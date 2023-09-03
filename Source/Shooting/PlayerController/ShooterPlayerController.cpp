@@ -173,6 +173,10 @@ void AShooterPlayerController::OnMatchStateSet(FName State)
 	{
 		HandleMatchStarted();
 	}
+	else if (MatchState == MatchState::Cooldown)
+	{
+		HandleCooldown();
+	}
 }
 
 void AShooterPlayerController::HandleMatchStarted()
@@ -184,6 +188,19 @@ void AShooterPlayerController::HandleMatchStarted()
 		if (ShooterHUD->Announcement)
 		{
 			ShooterHUD->Announcement->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+}
+
+void AShooterPlayerController::HandleCooldown()
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+	if (ShooterHUD)
+	{
+		ShooterHUD->CharacterOverlay->RemoveFromParent();
+		if (ShooterHUD->Announcement)
+		{
+			ShooterHUD->Announcement->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }

@@ -6,6 +6,12 @@
 #include "GameFramework/GameMode.h"
 #include "ShootingGameMode.generated.h"
 
+
+namespace MatchState
+{
+	extern SHOOTING_API const FName Cooldown;	// Match가 끝나고 결과 HUD를 띄움
+}
+
 /**
  * 
  */
@@ -24,6 +30,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	float MatchTime = 120.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float CooldownTime = 10.f;
 
 	float LevelStartingTime = 0.f;
 

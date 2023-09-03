@@ -24,6 +24,7 @@ public:
 
 	void OnMatchStateSet(FName State);
 	void HandleMatchStarted();
+	void HandleCooldown();
 
 protected:
 	virtual void BeginPlay() override;
