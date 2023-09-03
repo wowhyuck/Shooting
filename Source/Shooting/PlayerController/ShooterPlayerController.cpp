@@ -33,12 +33,13 @@ void AShooterPlayerController::SetHUDTime()
 	float TimeLeft = 0.f;
 	if (MatchState == MatchState::WaitingToStart) TimeLeft = WarmupTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
 	else if (MatchState == MatchState::InProgress) TimeLeft = WarmupTime + MatchTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
+	else if (MatchState == MatchState::Cooldown) TimeLeft = WarmupTime + MatchTime + CooldownTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
 
 	uint32 SecondsLeft = FMath::CeilToInt(TimeLeft);
 
 	if (CountdownInt != SecondsLeft)
 	{
-		if (MatchState == MatchState::WaitingToStart)
+		if (MatchState == MatchState::WaitingToStart || MatchState == MatchState::Cooldown)
 		{
 			SetHUDAnnouncementCountdown(TimeLeft);
 		}
@@ -73,6 +74,7 @@ void AShooterPlayerController::CheckMatchState()
 	{
 		WarmupTime = GameMode->WarmupTime;
 		MatchTime = GameMode->MatchTime;
+		CooldownTime = GameMode->CooldownTime;
 		LevelStartingTime = GameMode->LevelStartingTime;
 		MatchState = GameMode->GetMatchState();
 
@@ -130,6 +132,12 @@ void AShooterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 		ShooterHUD->CharacterOverlay->MatchCountdownText;
 	if (bHUDValid)
 	{
+		if (CountdownTime < 0.f)
+		{
+			ShooterHUD->CharacterOverlay->MatchCountdownText->SetText(FText());
+			return;
+		}
+
 		int32 Minutes = FMath::FloorToInt(CountdownTime / 60.f);
 		int32 Seconds = CountdownTime - Minutes * 60;
 
@@ -147,6 +155,12 @@ void AShooterPlayerController::SetHUDAnnouncementCountdown(float CountdownTime)
 		ShooterHUD->Announcement->WarmupTime;
 	if (bHUDValid)
 	{
+		if (CountdownTime < 0.f)
+		{
+			ShooterHUD->Announcement->WarmupTime->SetText(FText());
+			return;
+		}
+
 		int32 Seconds = CountdownTime;
 
 		FString CountdownText = FString::Printf(TEXT("%d"), Seconds);
@@ -198,9 +212,17 @@ void AShooterPlayerController::HandleCooldown()
 	if (ShooterHUD)
 	{
 		ShooterHUD->CharacterOverlay->RemoveFromParent();
-		if (ShooterHUD->Announcement)
+
+		bool bHUDValid = ShooterHUD->Announcement &&
+			ShooterHUD->Announcement->AnnouncementText1 &&
+			ShooterHUD->Announcement->AnnouncementText2;
+		if (bHUDValid)
 		{
 			ShooterHUD->Announcement->SetVisibility(ESlateVisibility::Visible);
+			FString AnnouncementText(TEXT("게임 재시작"));
+			ShooterHUD->Announcement->AnnouncementText1->SetText(FText::FromString(AnnouncementText));
+			ShooterHUD->Announcement->AnnouncementText2->SetText(FText());
+			ShooterHUD->Announcement->WarmupTime->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
