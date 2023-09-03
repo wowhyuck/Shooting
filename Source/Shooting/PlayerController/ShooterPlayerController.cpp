@@ -9,17 +9,14 @@
 #include "Components/TextBlock.h"
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/GameMode/ShootingGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void AShooterPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ShooterHUD = Cast<AShooterHUD>(GetHUD());
-	if (ShooterHUD)
-	{
-		ShooterHUD->AddAnnouncement();
-	}
+	CheckMatchState();
 }
 
 void AShooterPlayerController::Tick(float DeltaTime)
@@ -33,11 +30,22 @@ void AShooterPlayerController::Tick(float DeltaTime)
 
 void AShooterPlayerController::SetHUDTime()
 {
-	uint32 SecondsLeft = FMath::CeilToInt(MatchTime - GetWorld()->GetTimeSeconds());
+	float TimeLeft = 0.f;
+	if (MatchState == MatchState::WaitingToStart) TimeLeft = WarmupTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
+	else if (MatchState == MatchState::InProgress) TimeLeft = WarmupTime + MatchTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
+
+	uint32 SecondsLeft = FMath::CeilToInt(TimeLeft);
 
 	if (CountdownInt != SecondsLeft)
 	{
-		SetHUDMatchCountdown(MatchTime - GetWorld()->GetTimeSeconds());
+		if (MatchState == MatchState::WaitingToStart)
+		{
+			SetHUDAnnouncementCountdown(TimeLeft);
+		}
+		else if (MatchState == MatchState::InProgress)
+		{
+			SetHUDMatchCountdown(TimeLeft);
+		}
 	}
 
 	CountdownInt = SecondsLeft;
@@ -54,6 +62,24 @@ void AShooterPlayerController::PollInt()
 			{
 				SetHUDHealth(HUDHealth, HUDMaxHealth);
 			}
+		}
+	}
+}
+
+void AShooterPlayerController::CheckMatchState()
+{
+	AShootingGameMode* GameMode = Cast<AShootingGameMode>(UGameplayStatics::GetGameMode(this));
+	if (GameMode)
+	{
+		WarmupTime = GameMode->WarmupTime;
+		MatchTime = GameMode->MatchTime;
+		LevelStartingTime = GameMode->LevelStartingTime;
+		MatchState = GameMode->GetMatchState();
+
+		ShooterHUD = Cast<AShooterHUD>(GetHUD());
+		if (ShooterHUD && MatchState == MatchState::WaitingToStart)
+		{
+			ShooterHUD->AddAnnouncement();
 		}
 	}
 }
@@ -110,7 +136,22 @@ void AShooterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 		FString CountdownText = FString::Printf(TEXT("%02d : %02d"), Minutes, Seconds);
 		ShooterHUD->CharacterOverlay->MatchCountdownText->SetText(FText::FromString(CountdownText));
 	}
+}
 
+void AShooterPlayerController::SetHUDAnnouncementCountdown(float CountdownTime)
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+
+	bool bHUDValid = ShooterHUD &&
+		ShooterHUD->Announcement &&
+		ShooterHUD->Announcement->WarmupTime;
+	if (bHUDValid)
+	{
+		int32 Seconds = CountdownTime;
+
+		FString CountdownText = FString::Printf(TEXT("%d"), Seconds);
+		ShooterHUD->Announcement->WarmupTime->SetText(FText::FromString(CountdownText));
+	}
 }
 
 void AShooterPlayerController::OnPossess(APawn* InPawn)
