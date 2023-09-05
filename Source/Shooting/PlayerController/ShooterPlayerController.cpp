@@ -10,6 +10,7 @@
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/GameMode/ShootingGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Shooting/ShooterComponents/CombatComponent.h"
 
 
 void AShooterPlayerController::BeginPlay()
@@ -224,5 +225,12 @@ void AShooterPlayerController::HandleCooldown()
 			ShooterHUD->Announcement->AnnouncementText2->SetText(FText());
 			ShooterHUD->Announcement->WarmupTime->SetVisibility(ESlateVisibility::Hidden);
 		}
+	}
+
+	AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(GetPawn());
+	if (ShooterCharacter && ShooterCharacter->GetCombat())
+	{
+		ShooterCharacter->bDisableGameplay = true;
+		ShooterCharacter->GetCombat()->FireButtonPressed(false);
 	}
 }

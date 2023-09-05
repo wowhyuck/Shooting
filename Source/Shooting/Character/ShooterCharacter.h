@@ -22,10 +22,13 @@ public:
 	void PlayHitReactMontage();
 	void PlayReloadMontage();
 
+	bool bDisableGameplay = false;
+
 protected:
 	virtual void BeginPlay() override;
 
 	// 캐릭터 이동 & 회전
+	virtual void Jump() override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
@@ -98,4 +101,6 @@ public:
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 	ECombatState GetCombatState() const;
+	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 }; 
