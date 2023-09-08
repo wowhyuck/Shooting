@@ -13,7 +13,6 @@
 #include "TimerManager.h"
 #include "Sound/SoundCue.h"
 
-#define TRACE_LENGTH 80000.f
 
 UCombatComponent::UCombatComponent()
 {
