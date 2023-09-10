@@ -289,7 +289,14 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::SetAiming(bool bIsAiming)
 {
+	if (Character == nullptr || EquippedWeapon == nullptr) return;
+
 	bAiming = bIsAiming;
+
+	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	{
+		Character->ShowSniperScopeWidget(bIsAiming);
+	}
 }
 
 void UCombatComponent::Reload()
