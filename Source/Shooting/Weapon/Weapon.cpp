@@ -8,6 +8,7 @@
 #include "Casing.h"
 #include "Shooting/PlayerController/ShooterPlayerController.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/ShooterComponents/CombatComponent.h"
 
 
 AWeapon::AWeapon()
@@ -42,6 +43,12 @@ void AWeapon::SetHUDAmmo()
 	}
 }
 
+void AWeapon::AddAmmo(int32 AmmoToAdd)
+{
+	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
+	SetHUDAmmo();
+}
+
 void AWeapon::SpendRound()
 {
 	Ammo = FMath::Clamp(Ammo - 1, 0, MagCapacity);
@@ -51,6 +58,11 @@ void AWeapon::SpendRound()
 bool AWeapon::IsEmpty()
 {
 	return Ammo <= 0;
+}
+
+bool AWeapon::IsFull()
+{
+	return Ammo == MagCapacity;
 }
 
 void AWeapon::Fire(const FVector& HitTarget)

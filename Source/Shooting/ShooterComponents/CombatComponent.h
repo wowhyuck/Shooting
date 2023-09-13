@@ -30,6 +30,11 @@ public:
 
 	void FireButtonPressed(bool bPressed);
 
+	UFUNCTION(BlueprintCallable)
+	void ShotgunShellReload();
+
+	void JumpToShotgunEnd();
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -88,6 +93,8 @@ private:
 	bool CanFire();
 
 	ECombatState CombatState = ECombatState::ECS_Unoccupied;
+
+	void UpdateShotgunAmmoValues();
 
 public:	
 

@@ -27,6 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Fire(const FVector& HitTarget);
 	void SetHUDAmmo();
+	void AddAmmo(int32 AmmoToAdd);
 
 	/* 무기 조준점의 텍스처 변수 */
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
@@ -100,6 +101,7 @@ public:
 	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
 	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
 	bool IsEmpty();
+	bool IsFull();
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 	FORCEINLINE int32 GetAmmo() const { return Ammo; }
 	FORCEINLINE void SetAmmo(int32 AmmoAmount) { Ammo = AmmoAmount; }

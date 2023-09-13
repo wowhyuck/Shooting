@@ -3,6 +3,7 @@
 #include "CombatComponent.h"
 #include "Shooting/Weapon/Weapon.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/Character/ShooterAnimInstance.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -58,9 +59,23 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 	bFireButtonPressed = bPressed;
 
 	if (EquippedWeapon == nullptr) return;
-	if (Character && bFireButtonPressed && CombatState == ECombatState::ECS_Unoccupied)
+	if (Character && bFireButtonPressed)
 	{
 		Fire();
+	}
+}
+
+void UCombatComponent::ShotgunShellReload()
+{
+	UpdateShotgunAmmoValues();
+}
+
+void UCombatComponent::JumpToShotgunEnd()
+{
+	UAnimInstance* AnimInstance = Character->GetMesh()->GetAnimInstance();
+	if (AnimInstance && Character->GetReloadMontage())
+	{
+		AnimInstance->Montage_JumpToSection(FName("ShotgunEnd"));
 	}
 }
 
@@ -68,8 +83,18 @@ void UCombatComponent::Fire()
 {
 	if (CanFire())
 	{
-		Character->PlayFireMontage(bAiming);
-		EquippedWeapon->Fire(HitTarget);
+		if (Character && CombatState == ECombatState::ECS_Unoccupied)
+		{
+			Character->PlayFireMontage(bAiming);
+			EquippedWeapon->Fire(HitTarget);
+		}
+		// 샷건 장전 중일 때 사격
+		else if (Character && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
+		{
+			Character->PlayFireMontage(bAiming);
+			EquippedWeapon->Fire(HitTarget);
+			CombatState = ECombatState::ECS_Unoccupied;
+		}
 
 		bCanFire = false;
 		if (EquippedWeapon)
@@ -83,7 +108,21 @@ void UCombatComponent::Fire()
 bool UCombatComponent::CanFire()
 {
 	if (EquippedWeapon == nullptr) return false;
+	if (!EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun) return true;
 	return !EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Unoccupied;
+}
+
+void UCombatComponent::UpdateShotgunAmmoValues()
+{
+	if (Character == nullptr || EquippedWeapon == nullptr) return;
+
+	EquippedWeapon->AddAmmo(1);
+
+	bCanFire = true;
+	if (EquippedWeapon->IsFull())
+	{
+		JumpToShotgunEnd();
+	}
 }
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
