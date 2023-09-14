@@ -42,12 +42,17 @@ protected:
 
 	void SetHUDCrosshairs(float DeltaTime);
 
+	void AttachActorToRightHand(AActor* ActorToAttach);
+	void PlayEquipWeaponSound(AWeapon* WeaponToEquip);
+	void ReloadEmptyWeapon();
+
 private:
 	class AShooterCharacter* Character;
 	class AShooterPlayerController* Controller;
 	class AShooterHUD* HUD;
 
 	AWeapon* EquippedWeapon;
+	AWeapon* SecondaryWeapon;
 
 	bool bAiming;
 
