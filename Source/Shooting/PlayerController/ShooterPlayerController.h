@@ -55,5 +55,8 @@ private:
 
 	float HUDHealth;
 	float HUDMaxHealth;
+	bool bInitializeHealth = false;
 
+	float HUDWeaponAmmo;
+	bool bInitializeWeaponAmmo = false;
 };

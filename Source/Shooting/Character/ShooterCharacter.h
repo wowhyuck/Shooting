@@ -45,7 +45,11 @@ protected:
 
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
+	
 	void UpdateHUDHealth();
+	void UpdateHUDAmmo();
+
+	void SpawnDefaultWeapon();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -84,13 +88,11 @@ private:
 	float Health = 100.f;
 
 	class AShooterPlayerController* ShooterPlayerController;
+	class AShootingGameMode* ShootingGameMode;
 
-	/* ---------------- Test1 ---------------- */
-
-	UPROPERTY(EditAnywhere, Category = "Player Weapon")
-	class AWeapon* StartWeapon;
-
-	/* --------------------------------------- */
+	/* Default Weapon */
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeapon> DefaultWeaponClass;
 
 public:	
 	bool IsWeaponEquipped();

@@ -8,14 +8,12 @@
 #include "Shooting/ShooterComponents/CombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "ShooterAnimInstance.h"
 #include "Shooting/Shooting.h"
 #include "Shooting/PlayerController/ShooterPlayerController.h"
-
-/* ---------------- Test1 ---------------- */
 #include "Shooting/Weapon/Weapon.h"
-/* --------------------------------------- */
-
+#include "Shooting/GameMode/ShootingGameMode.h"
 
 
 AShooterCharacter::AShooterCharacter()
@@ -139,11 +137,8 @@ void AShooterCharacter::BeginPlay()
 	UpdateHUDHealth();
 	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);
 
-	/* ---------------- Test1 ---------------- */
-
-	Combat->EquipWeapon(StartWeapon);
-	/* --------------------------------------- */
-
+	SpawnDefaultWeapon();
+	UpdateHUDAmmo();
 }
 
 void AShooterCharacter::Tick(float DeltaTime)
@@ -289,6 +284,29 @@ void AShooterCharacter::UpdateHUDHealth()
 	if (ShooterPlayerController)
 	{
 		ShooterPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
+}
+
+void AShooterCharacter::UpdateHUDAmmo()
+{
+	ShooterPlayerController = ShooterPlayerController == nullptr ? Cast<AShooterPlayerController>(Controller) : ShooterPlayerController;
+	if (ShooterPlayerController && Combat && Combat->EquippedWeapon)
+	{
+		ShooterPlayerController->SetHUDWeaponAmmo(Combat->EquippedWeapon->GetAmmo());
+	}
+}
+
+void AShooterCharacter::SpawnDefaultWeapon()
+{
+	ShootingGameMode = ShootingGameMode == nullptr ? GetWorld()->GetAuthGameMode<AShootingGameMode>() : ShootingGameMode;
+	UWorld* World = GetWorld();
+	if (ShootingGameMode && World && DefaultWeaponClass)		// TODO : 캐릭터 제거가 구현될 때 !bElimmed 추가
+	{
+		AWeapon* StartingWeapon = World->SpawnActor<AWeapon>(DefaultWeaponClass);
+		if (Combat)
+		{
+			Combat->EquipWeapon(StartingWeapon);
+		}
 	}
 }
 

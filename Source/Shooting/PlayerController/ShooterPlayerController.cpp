@@ -62,7 +62,8 @@ void AShooterPlayerController::PollInt()
 			CharacterOverlay = ShooterHUD->CharacterOverlay;
 			if (CharacterOverlay)
 			{
-				SetHUDHealth(HUDHealth, HUDMaxHealth);
+				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
+				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
 			}
 		}
 	}
@@ -104,7 +105,7 @@ void AShooterPlayerController::SetHUDHealth(float Health, float MaxHealth)
 	}
 	else
 	{
-		bInitializeCharacterOverlay = true;
+		bInitializeHealth = true;
 		HUDHealth = Health;
 		HUDMaxHealth = MaxHealth;
 	}
@@ -121,6 +122,11 @@ void AShooterPlayerController::SetHUDWeaponAmmo(int32 Ammo)
 	{
 		FString AmmoAmountText = FString::Printf(TEXT("%d"), Ammo);
 		ShooterHUD->CharacterOverlay->WeaponAmmoAmount->SetText(FText::FromString(AmmoAmountText));
+	}
+	else
+	{
+		bInitializeWeaponAmmo = true;
+		HUDWeaponAmmo = Ammo;
 	}
 }
 
