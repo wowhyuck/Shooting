@@ -178,6 +178,12 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 {
 	if (Character == nullptr || Character->Controller == nullptr) return;
 
+	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle && bAiming && HUD != nullptr)
+	{
+		HUD->SetIsTransparent(true);
+		return;
+	}
+
 	Controller = Controller == nullptr ? Cast<AShooterPlayerController>(Character->Controller) : Controller;
 	if (Controller)
 	{
@@ -185,6 +191,8 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 		if (HUD)
 		{
 			FHUDPackage HUDPackage;
+			HUD->SetIsTransparent(false);
+
 			if (EquippedWeapon)
 			{
 				HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
@@ -363,6 +371,11 @@ void UCombatComponent::Reload()
 	{
 		CombatState = ECombatState::ECS_Reloading;
 		Character->PlayReloadMontage();
+
+		if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+		{
+			Character->ShowSniperScopeWidget(false);
+		}
 	}
 }
 
@@ -374,6 +387,11 @@ void UCombatComponent::FinishReloading()
 
 	EquippedWeapon->SetAmmo(EquippedWeapon->GetMagCapacity());
 	EquippedWeapon->SetHUDAmmo();
+
+	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	{
+		Character->ShowSniperScopeWidget(true);
+	}
 
 	if (bFireButtonPressed)
 	{
