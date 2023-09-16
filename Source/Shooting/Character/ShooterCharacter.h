@@ -18,6 +18,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PostInitializeComponents() override;
+
+	/* Montage 실행 함수 */
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
 	void PlayReloadMontage();
@@ -30,28 +32,37 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	// 캐릭터 이동 & 회전
+	/* 캐릭터 이동 & 회전 함수 */
 	virtual void Jump() override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
+	void AimOffset(float DeltaTime);
+	void TurnInPlace(float DeltaTime);
+
+	/* 입력키 함수 */
 	void AimButtonPressed();
 	void AimButtonReleased();
-	void AimOffset(float DeltaTime);
 	void FireButtonPressed();
 	void FireButtonReleased();
 	void ReloadButtonPressed();
 
+	// 피해 데미지 함수
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	
+	/* HUD 업데이트 함수 */
 	void UpdateHUDHealth();
 	void UpdateHUDAmmo();
 
+	// 기본 무기 장착 함수
 	void SpawnDefaultWeapon();
 
 private:
+	class AShooterPlayerController* ShooterPlayerController;
+	class AShootingGameMode* ShootingGameMode;
+
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class USpringArmComponent* CameraBoom;
 
@@ -61,14 +72,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCombatComponent* Combat;
 
+	// AimOffset 관련 변수
 	float AO_Yaw;
 	float InterpAO_Yaw;
 	float AO_Pitch;
 	FRotator StartingAimRotation;
-
 	ETurningInPlace TurningInPlace;
-	void TurnInPlace(float DeltaTime);
-
 
 	/* 애니메이션 몽타주 */
 	UPROPERTY(EditAnywhere, Category = Combat)
@@ -86,9 +95,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float Health = 100.f;
-
-	class AShooterPlayerController* ShooterPlayerController;
-	class AShootingGameMode* ShootingGameMode;
 
 	/* Default Weapon */
 	UPROPERTY(EditAnywhere)

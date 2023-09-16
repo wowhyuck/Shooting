@@ -20,7 +20,7 @@ AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// 카메라 세팅
+	/* 카메라 세팅 */
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetMesh());
 	CameraBoom->TargetArmLength = 600.f;
@@ -33,19 +33,42 @@ AShooterCharacter::AShooterCharacter()
 	bUseControllerRotationYaw = false;		// 컨트롤러 회전에 따라 캐릭터 회전 여부
 	GetCharacterMovement()->bOrientRotationToMovement = true;		// 캐릭터 이동방향에 따라 캐릭터 회전 여부
 
+	// CombatComponent 생성
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));	
 
+	/* 충돌 */
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
 
-	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+	TurningInPlace = ETurningInPlace::ETIP_NotTurning;		// 회전 상태 설정
+}
+
+void AShooterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);		// 데미지를 받을 때 ReceiveDamage 함수 호출
+
+	SpawnDefaultWeapon();		// 기본 무기 불러오기
+
+	/* HUD 불러오기 */
+	UpdateHUDAmmo();
+	UpdateHUDHealth();
+}
+
+void AShooterCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	AimOffset(DeltaTime);
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Action Mappings
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AShooterCharacter::AimButtonPressed);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AShooterCharacter::AimButtonReleased);
@@ -53,7 +76,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AShooterCharacter::FireButtonReleased);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AShooterCharacter::ReloadButtonPressed);
 
-	// 캐릭터 이동 & 회전 입력키 바인딩
+	// Axis Mappings
 	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::LookUp);
@@ -64,6 +87,7 @@ void AShooterCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	// CombatComponent
 	if (Combat)
 	{
 		Combat->Character = this;
@@ -107,6 +131,7 @@ void AShooterCharacter::PlayReloadMontage()
 		AnimInstance->Montage_Play(ReloadMontage);
 		FName SectionName;
 
+		// 무기 타입에 맞는 장전 애니메이션으로 JumpToSection하기
 		switch (Combat->EquippedWeapon->GetWeaponType())
 		{
 		case EWeaponType::EWT_AssultRifle:
@@ -125,28 +150,10 @@ void AShooterCharacter::PlayReloadMontage()
 			SectionName = FName("Sniper");
 			break;
 		}
-
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
 
-void AShooterCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UpdateHUDHealth();
-	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);
-
-	SpawnDefaultWeapon();
-	UpdateHUDAmmo();
-}
-
-void AShooterCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	AimOffset(DeltaTime);
-}
 
 void AShooterCharacter::Jump()
 {
@@ -189,26 +196,6 @@ void AShooterCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
-void AShooterCharacter::AimButtonPressed()
-{
-	if (bDisableGameplay) return;
-
-	if (Combat)
-	{
-		Combat->SetAiming(true);
-	}
-}
-
-void AShooterCharacter::AimButtonReleased()
-{
-	if (bDisableGameplay) return;
-
-	if (Combat)
-	{
-		Combat->SetAiming(false);
-	}
-}
-
 void AShooterCharacter::AimOffset(float DeltaTime)
 {
 	if (Combat && Combat->EquippedWeapon == nullptr) return;
@@ -238,6 +225,55 @@ void AShooterCharacter::AimOffset(float DeltaTime)
 	}
 
 	AO_Pitch = GetBaseAimRotation().Pitch;
+}
+
+void AShooterCharacter::TurnInPlace(float DeltaTime)
+{
+	if (bDisableGameplay)
+	{
+		bUseControllerRotationYaw = false;
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		return;
+	}
+
+	if (AO_Yaw > 90.f)
+	{
+		TurningInPlace = ETurningInPlace::ETIP_Right;
+	}
+	else if (AO_Yaw < -90.f)
+	{
+		TurningInPlace = ETurningInPlace::ETIP_Left;
+	}
+	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning)
+	{
+		InterpAO_Yaw = FMath::FInterpTo(InterpAO_Yaw, 0.f, DeltaTime, 4.f);
+		AO_Yaw = InterpAO_Yaw;
+		if (FMath::Abs(AO_Yaw) < 15.f)
+		{
+			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+			StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
+		}
+	}
+}
+
+void AShooterCharacter::AimButtonPressed()
+{
+	if (bDisableGameplay) return;
+
+	if (Combat)
+	{
+		Combat->SetAiming(true);
+	}
+}
+
+void AShooterCharacter::AimButtonReleased()
+{
+	if (bDisableGameplay) return;
+
+	if (Combat)
+	{
+		Combat->SetAiming(false);
+	}
 }
 
 void AShooterCharacter::FireButtonPressed()
@@ -306,35 +342,6 @@ void AShooterCharacter::SpawnDefaultWeapon()
 		if (Combat)
 		{
 			Combat->EquipWeapon(StartingWeapon);
-		}
-	}
-}
-
-void AShooterCharacter::TurnInPlace(float DeltaTime)
-{
-	if (bDisableGameplay)
-	{
-		bUseControllerRotationYaw = false;
-		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
-		return;
-	}
-
-	if (AO_Yaw > 90.f)
-	{
-		TurningInPlace = ETurningInPlace::ETIP_Right;
-	}
-	else if (AO_Yaw < -90.f)
-	{
-		TurningInPlace = ETurningInPlace::ETIP_Left;
-	}
-	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning)
-	{
-		InterpAO_Yaw = FMath::FInterpTo(InterpAO_Yaw, 0.f, DeltaTime, 4.f);
-		AO_Yaw = InterpAO_Yaw;
-		if (FMath::Abs(AO_Yaw) < 15.f)
-		{
-			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
-			StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
 		}
 	}
 }
