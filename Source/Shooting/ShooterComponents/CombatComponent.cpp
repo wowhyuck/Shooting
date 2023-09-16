@@ -356,7 +356,7 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 
 	bAiming = bIsAiming;
 
-	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle && CombatState != ECombatState::ECS_Reloading)
 	{
 		Character->ShowSniperScopeWidget(bIsAiming);
 	}
@@ -388,7 +388,7 @@ void UCombatComponent::FinishReloading()
 	EquippedWeapon->SetAmmo(EquippedWeapon->GetMagCapacity());
 	EquippedWeapon->SetHUDAmmo();
 
-	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle && bAiming)
 	{
 		Character->ShowSniperScopeWidget(true);
 	}
