@@ -5,8 +5,9 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 #include "WeaponType.h"
 #include "DrawDebugHelpers.h"
 
@@ -49,13 +50,13 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 				FireHit.ImpactNormal.Rotation());
 		}
 
-		//if (HitSound)
-		//{
-		//	UGameplayStatics::PlaySoundAtLocation(
-		//		this,
-		//		HitSound,
-		//		FireHit.ImpactPoint);
-		//}
+		if (HitSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				HitSound,
+				FireHit.ImpactPoint);
+		}
 
 		if (MuzzleFlash)
 		{
@@ -65,13 +66,13 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 				SocketTransform);
 		}
 
-		//if (FireSound)
-		//{
-		//	UGameplayStatics::PlaySoundAtLocation(
-		//		this,
-		//		FireSound,
-		//		GetActorLocation());
-		//}
+		if (FireSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				FireSound,
+				GetActorLocation());
+		}
 	}
 }
 

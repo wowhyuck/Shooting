@@ -372,6 +372,7 @@ void UCombatComponent::Reload()
 		CombatState = ECombatState::ECS_Reloading;
 		Character->PlayReloadMontage();
 
+		if (!bAiming) return;
 		if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
 		{
 			Character->ShowSniperScopeWidget(false);
