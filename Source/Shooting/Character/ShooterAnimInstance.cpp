@@ -26,15 +26,14 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	}
 	if (ShooterCharacter == nullptr) return;
 
-	// 캐릭터 이동, 점프 관련 변수 초기화
+	/* 캐릭터 이동, 점프 관련 변수 초기화 */
 	FVector Velocity = ShooterCharacter->GetVelocity();
 	Velocity.Z = 0.f;
 	Speed = Velocity.Size();
-
 	bIsInAir = ShooterCharacter->GetCharacterMovement()->IsFalling();
 	bIsAccelerating = ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f ? true : false;
-	bWeaponEquipped = ShooterCharacter->IsWeaponEquipped();
-	EquippedWeapon = ShooterCharacter->GetEquippedWeapon();
+
+	/* AimOffset 관련 변수 초기화 */
 	bAiming = ShooterCharacter->IsAiming();
 	TurningInPlace = ShooterCharacter->GetTurningInPlace();
 
@@ -42,17 +41,21 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(ShooterCharacter->GetVelocity());
 	FRotator DeltaRot = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation);
 	DeltaRotation = FMath::RInterpTo(DeltaRotation, DeltaRot, DeltaTime, 5.f);
-	YawOffset = DeltaRotation.Yaw;
-
 	CharacterRotationLastFrame = CharacterRotation;
 	CharacterRotation = ShooterCharacter->GetActorRotation();
+	YawOffset = DeltaRotation.Yaw;
+
 	const FRotator Delta = UKismetMathLibrary::NormalizedDeltaRotator(CharacterRotation, CharacterRotationLastFrame);
 	const float Target = Delta.Yaw / DeltaTime;
 	const float Interp = FMath::FInterpTo(Lean, Target, DeltaTime, 6.f);
 	Lean = FMath::Clamp(Interp, -90.f, 90.f);
 
+	/* 무기 장착 관련 변수 초기화 */
 	AO_Yaw = ShooterCharacter->GetAO_Yaw();
 	AO_Pitch = ShooterCharacter->GetAO_Pitch();
+
+	bWeaponEquipped = ShooterCharacter->IsWeaponEquipped();
+	EquippedWeapon = ShooterCharacter->GetEquippedWeapon();
 
 	if (bWeaponEquipped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && ShooterCharacter->GetMesh())
 	{
@@ -67,6 +70,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		RightHandRotation = UKismetMathLibrary::FindLookAtRotation(RightHandTransform.GetLocation(), RightHandTransform.GetLocation() + (RightHandTransform.GetLocation() - ShooterCharacter->GetHitTarget()));
 	}
 
+	/* 조건 관련 변수 초기화 */
 	bUseFABRIK = ShooterCharacter->GetCombatState() != ECombatState::ECS_Reloading;
 	bUseAimOffsets = ShooterCharacter->GetCombatState() != ECombatState::ECS_Reloading && !ShooterCharacter->GetDisableGameplay();
 	bTransformRightHand = ShooterCharacter->GetCombatState() != ECombatState::ECS_Reloading && !ShooterCharacter->GetDisableGameplay();
