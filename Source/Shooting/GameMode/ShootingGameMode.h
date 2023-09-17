@@ -25,6 +25,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	/* 각 MatchState의 지속 시간 */
 	UPROPERTY(EditDefaultsOnly)
 	float WarmupTime = 10.f;
 

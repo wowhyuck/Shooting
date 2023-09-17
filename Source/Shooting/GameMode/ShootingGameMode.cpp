@@ -5,6 +5,7 @@
 #include "Shooting/PlayerController/ShooterPlayerController.h"
 
 
+// MatchState Custom
 namespace MatchState
 {
 	const FName Cooldown = FName("Cooldown");
@@ -12,7 +13,7 @@ namespace MatchState
 
 AShootingGameMode::AShootingGameMode()
 {
-	bDelayedStart = true;
+	bDelayedStart = true;		// 게임이 바로 시작 방지
 }
 
 void AShootingGameMode::BeginPlay()
@@ -26,7 +27,7 @@ void AShootingGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (MatchState == MatchState::WaitingToStart)
+	if (MatchState == MatchState::WaitingToStart)		// 게임 시작 전 준비
 	{
 		CountdownTime = WarmupTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
 		if (CountdownTime <= 0.f)
@@ -34,7 +35,7 @@ void AShootingGameMode::Tick(float DeltaTime)
 			StartMatch();
 		}
 	}
-	else if (MatchState == MatchState::InProgress)
+	else if (MatchState == MatchState::InProgress)		// 게임 시작
 	{
 		CountdownTime = WarmupTime + MatchTime- GetWorld()->GetTimeSeconds() + LevelStartingTime;
 		if (CountdownTime <= 0.f)
@@ -42,7 +43,7 @@ void AShootingGameMode::Tick(float DeltaTime)
 			SetMatchState(MatchState::Cooldown);
 		}
 	}
-	else if (MatchState == MatchState::Cooldown)
+	else if (MatchState == MatchState::Cooldown)		// 게임 종료 및 결과
 	{
 		CountdownTime = CooldownTime + WarmupTime + MatchTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
 		
