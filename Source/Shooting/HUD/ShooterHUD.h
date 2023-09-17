@@ -8,7 +8,7 @@
 
 
 USTRUCT(BlueprintType)
-struct FHUDPackage
+struct FHUDPackage		// 조준점 HUD 구성 구조체
 {
 	GENERATED_BODY()
 public:
@@ -31,14 +31,7 @@ class SHOOTING_API AShooterHUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 
-	UPROPERTY(EditAnywhere, Category = "Player Stats")
-	TSubclassOf<class UUserWidget> CharacterOverlayClass;
-
-	UPROPERTY()
-	class UCharacterOverlay* CharacterOverlay;
-
-	void AddCharacterOverlay();
-
+	/* 게임 시작 전 준비 HUD (Announcement Widget) */
 	UPROPERTY(EditAnywhere, Category = "Announcement")
 	TSubclassOf<UUserWidget> AnnouncementClass;
 
@@ -47,18 +40,28 @@ public:
 
 	void AddAnnouncement();
 
-protected:
-	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread, bool bTransparent);
+	/* 게임 중 HUD (CharacterOverlay Widget) */
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	TSubclassOf<class UUserWidget> CharacterOverlayClass;
 
+	UPROPERTY()
+	class UCharacterOverlay* CharacterOverlay;
+
+	void AddCharacterOverlay();
+
+protected:
 	virtual void BeginPlay() override;
 
+	// 조준점 그리기 함수
+	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread, bool bTransparent);
+
 private:
+	/* 조준점 HUD 관련 변수 */
 	FHUDPackage HUDPackage;
+	bool IsTransparent = false;
 
 	UPROPERTY(EditAnywhere)
 	float CrosshairSpreadMax = 16.f;
-
-	bool IsTransparent = false;
 
 public:
 	FORCEINLINE void SetHUDPackage(const FHUDPackage& Package) { HUDPackage = Package; }

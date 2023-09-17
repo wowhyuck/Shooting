@@ -12,17 +12,6 @@ void AShooterHUD::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AShooterHUD::AddCharacterOverlay()
-{
-	APlayerController* PlayerController = GetOwningPlayerController();
-
-	if (PlayerController && CharacterOverlayClass)
-	{
-		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
-		CharacterOverlay->AddToViewport();
-	}
-}
-
 void AShooterHUD::AddAnnouncement()
 {
 	APlayerController* PlayerController = GetOwningPlayerController();
@@ -31,6 +20,17 @@ void AShooterHUD::AddAnnouncement()
 	{
 		Announcement = CreateWidget<UAnnouncement>(PlayerController, AnnouncementClass);
 		Announcement->AddToViewport();
+	}
+}
+
+void AShooterHUD::AddCharacterOverlay()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+
+	if (PlayerController && CharacterOverlayClass)
+	{
+		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
+		CharacterOverlay->AddToViewport();
 	}
 }
 
@@ -44,8 +44,10 @@ void AShooterHUD::DrawHUD()
 		GEngine->GameViewport->GetViewportSize(ViewportSize);
 		const FVector2D ViewportCenter(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
 
+		// 조준점 퍼짐
 		float SpreadScaled = CrosshairSpreadMax * HUDPackage.CrosshairSpread;
 
+		// 조준점 텍스처 그리기
 		if (HUDPackage.CrosshairsCenter)
 		{
 			FVector2D Spread(0.f, 0.f);
@@ -84,6 +86,7 @@ void AShooterHUD::DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, F
 
 	if (bTransparent)
 	{
+		// bTransparent 변수를 통해 조준점 숨기기
 		DrawTexture(
 			Texture,
 			TextureDrawPoint.X,
