@@ -35,7 +35,7 @@ void AShootingGameMode::Tick(float DeltaTime)
 			StartMatch();
 		}
 	}
-	else if (MatchState == MatchState::InProgress)		// 게임 시작
+	else if (MatchState == MatchState::InProgress)		// 게임 중
 	{
 		CountdownTime = WarmupTime + MatchTime- GetWorld()->GetTimeSeconds() + LevelStartingTime;
 		if (CountdownTime <= 0.f)
