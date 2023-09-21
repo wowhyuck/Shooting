@@ -75,6 +75,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShooterCharacter::FireButtonPressed);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AShooterCharacter::FireButtonReleased);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AShooterCharacter::ReloadButtonPressed);
+	//PlayerInputComponent->BindAction("Swap", IE_Pressed, this, &AShooterCharacter::SwapButtonPressed);
 
 	// Axis Mappings
 	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
@@ -154,6 +155,14 @@ void AShooterCharacter::PlayReloadMontage()
 	}
 }
 
+void AShooterCharacter::PlaySwapMontage()
+{
+	//UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	//if (AnimInstance && SwapMontage)
+	//{
+	//	AnimInstance->Montage_Play(SwapMontage);
+	//}
+}
 
 void AShooterCharacter::Jump()
 {
@@ -306,6 +315,16 @@ void AShooterCharacter::ReloadButtonPressed()
 	}
 }
 
+void AShooterCharacter::SwapButtonPressed()
+{
+	//if (bDisableGameplay) return;
+
+	//if (Combat)
+	//{
+	//	Combat->SwapWeapons();
+	//}
+}
+
 void AShooterCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
 {
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
@@ -341,7 +360,15 @@ void AShooterCharacter::SpawnDefaultWeapon()
 		AWeapon* StartingWeapon = World->SpawnActor<AWeapon>(DefaultWeaponClass);
 		if (Combat)
 		{
-			Combat->EquipWeapon(StartingWeapon);
+			Combat->EquipPrimaryWeapon(StartingWeapon);
+		}
+		if (SecondaryWeaponClass != nullptr)
+		{
+			AWeapon* SecondaryWeapon = World->SpawnActor<AWeapon>(SecondaryWeaponClass);
+			if (Combat)
+			{
+				Combat->EquipSecondaryWeapon(SecondaryWeapon);
+			}
 		}
 	}
 }

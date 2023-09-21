@@ -20,6 +20,9 @@ public:
 	friend class AShooterCharacter;
 
 	void EquipWeapon(class AWeapon* WeaponToEquip);
+	void EquipPrimaryWeapon(AWeapon* WeaponToEquip);
+	void EquipSecondaryWeapon(AWeapon* WeaponToEquip);
+	void SwapWeapons();
 
 	void SetAiming(bool bIsAiming);
 
@@ -43,6 +46,7 @@ protected:
 	void SetHUDCrosshairs(float DeltaTime);
 
 	void AttachActorToRightHand(AActor* ActorToAttach);
+	void AttachActorToBackpack(AWeapon* ActorToAttach);
 	void PlayEquipWeaponSound(AWeapon* WeaponToEquip);
 	void ReloadEmptyWeapon();
 

@@ -23,6 +23,7 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
 	void PlayReloadMontage();
+	void PlaySwapMontage();
 
 	bool bDisableGameplay = false;
 
@@ -47,6 +48,7 @@ protected:
 	void FireButtonPressed();
 	void FireButtonReleased();
 	void ReloadButtonPressed();
+	void SwapButtonPressed();
 
 	// 피해 데미지 함수
 	UFUNCTION()
@@ -89,6 +91,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ReloadMontage;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* SwapMontage;
+
 	/* 플레이어 체력 */
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float MaxHealth = 100.f;
@@ -96,9 +101,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float Health = 100.f;
 
-	/* Default Weapon */
+	/* Weapons */
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> DefaultWeaponClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> SecondaryWeaponClass;
 
 public:	
 	bool IsWeaponEquipped();

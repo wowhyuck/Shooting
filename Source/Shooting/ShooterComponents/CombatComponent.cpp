@@ -306,6 +306,25 @@ void UCombatComponent::FireTimerFinished()
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
+	/* 추후 무기 구입할 때 사용 */
+	//if (Character == nullptr || WeaponToEquip == nullptr) return;
+	//if (CombatState != ECombatState::ECS_Unoccupied) return;
+
+	//if (EquippedWeapon != nullptr && SecondaryWeapon == nullptr)
+	//{
+	//	EquipSecondaryWeapon(WeaponToEquip);
+	//}
+	//else
+	//{
+	//	EquipPrimaryWeapon(WeaponToEquip);
+	//}
+
+	//Character->GetCharacterMovement()->bOrientRotationToMovement = false;
+	//Character->bUseControllerRotationYaw = true;
+}
+
+void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
+{
 	if (Character == nullptr || WeaponToEquip == nullptr) return;
 	if (CombatState != ECombatState::ECS_Unoccupied) return;
 
@@ -314,11 +333,39 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 	AttachActorToRightHand(EquippedWeapon);
 	EquippedWeapon->SetOwner(Character);
 	EquippedWeapon->SetHUDAmmo();
+
 	PlayEquipWeaponSound(EquippedWeapon);
 	ReloadEmptyWeapon();
 
 	Character->GetCharacterMovement()->bOrientRotationToMovement = false;
 	Character->bUseControllerRotationYaw = true;
+}
+
+void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
+{
+	SecondaryWeapon = WeaponToEquip;
+	AttachActorToBackpack(WeaponToEquip);
+	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+	PlayEquipWeaponSound(SecondaryWeapon);
+	EquippedWeapon->SetOwner(Character);
+
+	if (EquippedWeapon == nullptr)  return;
+	EquippedWeapon->SetOwner(Character);
+}
+
+void UCombatComponent::SwapWeapons()
+{
+	//if (CombatState != ECombatState::ECS_Unoccupied || Character == nullptr) return;
+	//if (SecondaryWeapon == nullptr) return;
+
+	//UE_LOG(LogTemp, Warning, TEXT("SwapWeapons"));
+
+	//Character->PlaySwapMontage();
+	//CombatState = ECombatState::ECS_SwappingWeapons;
+
+	//AWeapon* TempWeapon = SecondaryWeapon;
+	//EquipSecondaryWeapon(EquippedWeapon);
+	//EquipPrimaryWeapon(TempWeapon);
 }
 
 void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
@@ -328,6 +375,27 @@ void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
 	if (HandSocket)
 	{
 		HandSocket->AttachActor(ActorToAttach, Character->GetMesh());
+	}
+}
+
+void UCombatComponent::AttachActorToBackpack(AWeapon* ActorToAttach)
+{
+	if (Character == nullptr || Character->GetMesh() == nullptr || ActorToAttach == nullptr) return;
+
+	const USkeletalMeshSocket* BackpackSocket;
+	
+	if (ActorToAttach->GetWeaponType() == EWeaponType::EWT_RocketLauncher)
+	{
+		BackpackSocket = Character->GetMesh()->GetSocketByName(FName("BackpackSocket_R"));
+	}
+	else
+	{
+		BackpackSocket = Character->GetMesh()->GetSocketByName(FName("BackpackSocket"));
+	}
+
+	if (BackpackSocket)
+	{
+		BackpackSocket->AttachActor(ActorToAttach, Character->GetMesh());
 	}
 }
 
