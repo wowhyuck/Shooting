@@ -125,6 +125,11 @@ void UCombatComponent::UpdateShotgunAmmoValues()
 	}
 }
 
+bool UCombatComponent::ShouldSwapWeapons()
+{
+	return (EquippedWeapon != nullptr && SecondaryWeapon != nullptr);
+}
+
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 {
 	FVector2D ViewportSize;
@@ -345,27 +350,19 @@ void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 {
 	SecondaryWeapon = WeaponToEquip;
 	AttachActorToBackpack(WeaponToEquip);
-	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
 	PlayEquipWeaponSound(SecondaryWeapon);
-	EquippedWeapon->SetOwner(Character);
-
-	if (EquippedWeapon == nullptr)  return;
 	EquippedWeapon->SetOwner(Character);
 }
 
 void UCombatComponent::SwapWeapons()
 {
-	//if (CombatState != ECombatState::ECS_Unoccupied || Character == nullptr) return;
-	//if (SecondaryWeapon == nullptr) return;
+	AWeapon* TempWeapon = EquippedWeapon;
+	EquippedWeapon = SecondaryWeapon;
+	SecondaryWeapon = TempWeapon;
 
-	//UE_LOG(LogTemp, Warning, TEXT("SwapWeapons"));
-
-	//Character->PlaySwapMontage();
-	//CombatState = ECombatState::ECS_SwappingWeapons;
-
-	//AWeapon* TempWeapon = SecondaryWeapon;
-	//EquipSecondaryWeapon(EquippedWeapon);
-	//EquipPrimaryWeapon(TempWeapon);
+	EquipPrimaryWeapon(EquippedWeapon);
+	EquipSecondaryWeapon(SecondaryWeapon);
 }
 
 void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)

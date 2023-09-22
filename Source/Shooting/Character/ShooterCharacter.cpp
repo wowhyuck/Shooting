@@ -75,7 +75,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShooterCharacter::FireButtonPressed);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AShooterCharacter::FireButtonReleased);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AShooterCharacter::ReloadButtonPressed);
-	//PlayerInputComponent->BindAction("Swap", IE_Pressed, this, &AShooterCharacter::SwapButtonPressed);
+	PlayerInputComponent->BindAction("Swap", IE_Pressed, this, &AShooterCharacter::SwapButtonPressed);
 
 	// Axis Mappings
 	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
@@ -317,12 +317,12 @@ void AShooterCharacter::ReloadButtonPressed()
 
 void AShooterCharacter::SwapButtonPressed()
 {
-	//if (bDisableGameplay) return;
+	if (bDisableGameplay) return;
 
-	//if (Combat)
-	//{
-	//	Combat->SwapWeapons();
-	//}
+	if (Combat)
+	{
+		Combat->SwapWeapons();
+	}
 }
 
 void AShooterCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
