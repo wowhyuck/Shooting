@@ -331,7 +331,6 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 {
 	if (Character == nullptr || WeaponToEquip == nullptr) return;
-	if (CombatState != ECombatState::ECS_Unoccupied) return;
 
 	EquippedWeapon = WeaponToEquip;
 	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
@@ -357,12 +356,10 @@ void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::SwapWeapons()
 {
-	AWeapon* TempWeapon = EquippedWeapon;
-	EquippedWeapon = SecondaryWeapon;
-	SecondaryWeapon = TempWeapon;
+	if (CombatState != ECombatState::ECS_Unoccupied || Character == nullptr) return;
 
-	EquipPrimaryWeapon(EquippedWeapon);
-	EquipSecondaryWeapon(SecondaryWeapon);
+	Character->PlaySwapMontage();
+	CombatState = ECombatState::ECS_SwappingWeapons;
 }
 
 void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
@@ -465,3 +462,20 @@ void UCombatComponent::FinishReloading()
 	}
 }
 
+void UCombatComponent::FinishSwap()
+{
+	if (Character)
+	{
+		CombatState = ECombatState::ECS_Unoccupied;
+	}
+}
+
+void UCombatComponent::FinishSwapAttachWeapons()
+{
+	AWeapon* TempWeapon = EquippedWeapon;
+	EquippedWeapon = SecondaryWeapon;
+	SecondaryWeapon = TempWeapon;
+
+	EquipPrimaryWeapon(EquippedWeapon);
+	EquipSecondaryWeapon(SecondaryWeapon);
+}

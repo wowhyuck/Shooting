@@ -157,11 +157,11 @@ void AShooterCharacter::PlayReloadMontage()
 
 void AShooterCharacter::PlaySwapMontage()
 {
-	//UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	//if (AnimInstance && SwapMontage)
-	//{
-	//	AnimInstance->Montage_Play(SwapMontage);
-	//}
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && SwapMontage)
+	{
+		AnimInstance->Montage_Play(SwapMontage);
+	}
 }
 
 void AShooterCharacter::Jump()
