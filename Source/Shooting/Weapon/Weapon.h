@@ -8,6 +8,7 @@
 #include "Weapon.generated.h"
 
 
+/* 무기 장착 상태 (주 무기, 보조 무기)*/
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
@@ -26,9 +27,10 @@ class SHOOTING_API AWeapon : public AActor
 public:	
 	AWeapon();
 	virtual void Tick(float DeltaTime) override;
-	virtual void Fire(const FVector& HitTarget);
-	void SetHUDAmmo();
-	void AddAmmo(int32 AmmoToAdd);
+
+	virtual void Fire(const FVector& HitTarget);		// 사격 함수
+	void SetHUDAmmo();		// 탄약 HUD 세팅 함수
+	void AddAmmo(int32 AmmoToAdd);		// 탄약 추가 함수
 
 	/* 무기 조준점의 텍스처 변수 */
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
@@ -60,44 +62,51 @@ public:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	bool bAutomatic = true;
 
+	// 무기 장착 소리
 	UPROPERTY(EditAnywhere)
 	class USoundCue* EquipSound;
 
 protected:
 	virtual void BeginPlay() override;
+
+	/* 무기 장착 상태에 따른 함수 */
 	virtual void OnWeaponStateSet();
 	virtual void OnEquipped();
 	virtual void OnEquippedSecondary();
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
-	USkeletalMeshComponent* WeaponMesh;
-
-	UPROPERTY(VisibleAnywhere)
-	EWeaponState WeaponState;
-
-	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	class UAnimationAsset* FireAnimation;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class ACasing> CasingClass;
-
-	UPROPERTY(EditAnywhere)
-	int32 Ammo;
-
-	void SpendRound();
-
-	UPROPERTY(EditAnywhere)
-	int32 MagCapacity;
-
 	UPROPERTY()
 	class AShooterCharacter* ShooterOwnerCharacter;
 
 	UPROPERTY()
 	class AShooterPlayerController* ShooterOwnerController;
 
+	/* 무기 구성 관련 변수 */
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	EWeaponState WeaponState;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ACasing> CasingClass;
+
 	UPROPERTY(EditAnywhere)
 	EWeaponType WeaponType;
+
+	// 연사 애니메이션
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	class UAnimationAsset* FireAnimation;
+
+	/* 탄약 관련 변수*/
+	UPROPERTY(EditAnywhere)
+	int32 Ammo;
+
+	UPROPERTY(EditAnywhere)
+	int32 MagCapacity;
+
+	// 사격했을 때 탄약 감소
+	void SpendRound();
 
 public:	
 	FORCEINLINE void SetWeaponState(EWeaponState State);
