@@ -16,7 +16,7 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 	{
 		FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 
-		// muzzle flash socket부터 조준점(TraceUnderCrosshairs)으로부터 hit 위치
+		// Muzzle flash socket부터 HitTarget의 방향 
 		FVector ToTarget = HitTarget - SocketTransform.GetLocation();
 		FRotator TargetRotation = ToTarget.Rotation();
 
@@ -28,6 +28,7 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 			UWorld* World = GetWorld();
 			if (World)
 			{
+				// Muzzle flash 위치에 HitTarget을 향하는 방향으로 회전하면서 스폰하기
 				World->SpawnActor<AProjectile>(
 					ProjectileClass,
 					SocketTransform.GetLocation(),

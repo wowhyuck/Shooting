@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,6 +23,7 @@ protected:
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	/* 총알 관련 변수 */
 	UPROPERTY(EditAnywhere)
 	float Damage = 20.f;
 
@@ -39,7 +40,7 @@ protected:
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 private:
-
+	/* Particle System */
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* Tracer;
 
