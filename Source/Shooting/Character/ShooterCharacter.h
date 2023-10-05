@@ -24,6 +24,7 @@ public:
 	void PlayHitReactMontage();
 	void PlayReloadMontage();
 	void PlaySwapMontage();
+	void PlayDieMontage();
 
 	bool bDisableGameplay = false;
 
@@ -54,6 +55,12 @@ protected:
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	
+	/* 죽기 함수 */
+	void Die();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishDeath();
+
 	/* HUD 업데이트 함수 */
 	void UpdateHUDHealth();
 	void UpdateHUDAmmo();
@@ -94,6 +101,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* SwapMontage;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* DieMontage;
+
 	/* 플레이어 체력 */
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float MaxHealth = 100.f;
@@ -107,6 +117,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> SecondaryWeaponClass;
+
+	// 죽기 여부
+	bool bDead = false;
 
 public:	
 	bool IsWeaponEquipped();
@@ -123,4 +136,5 @@ public:
 	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
+	FORCEINLINE bool IsDead() const { return bDead; }
 }; 

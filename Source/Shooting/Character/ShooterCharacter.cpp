@@ -164,6 +164,15 @@ void AShooterCharacter::PlaySwapMontage()
 	}
 }
 
+void AShooterCharacter::PlayDieMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DieMontage)
+	{
+		AnimInstance->Montage_Play(DieMontage);
+	}
+}
+
 void AShooterCharacter::Jump()
 {
 	if (bDisableGameplay) return;
@@ -328,8 +337,34 @@ void AShooterCharacter::SwapButtonPressed()
 void AShooterCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
 {
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
+
+	if (Health <= 0.f)
+	{
+		Health = 0.f;
+		Die();
+	}
+	else
+	{
+		PlayHitReactMontage();
+	}
+
 	UpdateHUDHealth();
-	PlayHitReactMontage();
+}
+
+void AShooterCharacter::Die()
+{
+	bDead = true;
+	PlayDieMontage();
+}
+
+void AShooterCharacter::FinishDeath()
+{
+	GetMesh()->bPauseAnims = true;
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	if (PC)
+	{
+		DisableInput(PC);
+	}
 }
 
 void AShooterCharacter::UpdateHUDHealth()

@@ -71,6 +71,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	}
 
 	/* 조건 관련 변수 초기화 */
+	bDead = ShooterCharacter->IsDead();
 	bUseFABRIK = ShooterCharacter->GetCombatState() == ECombatState::ECS_Unoccupied;
 	bUseAimOffsets = ShooterCharacter->GetCombatState() == ECombatState::ECS_Unoccupied && !ShooterCharacter->GetDisableGameplay();
 	bTransformRightHand = ShooterCharacter->GetCombatState() == ECombatState::ECS_Unoccupied && !ShooterCharacter->GetDisableGameplay();
