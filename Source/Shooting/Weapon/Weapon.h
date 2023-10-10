@@ -31,6 +31,7 @@ public:
 	virtual void Fire(const FVector& HitTarget);		// 사격 함수
 	void SetHUDAmmo();		// 탄약 HUD 세팅 함수
 	void AddAmmo(int32 AmmoToAdd);		// 탄약 추가 함수
+	void SetHUDWeapon();		// 무기 이름, 이미지 HUD 세팅 함수
 
 	/* 무기 조준점의 텍스처 변수 */
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
@@ -93,6 +94,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	EWeaponType WeaponType;
+
+	UPROPERTY(EditAnywhere)
+	FString WeaponName;
+	
+	UPROPERTY(EditAnywhere)
+	UTexture2D* WeaponIcon;
 
 	// 연사 애니메이션
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")

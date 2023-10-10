@@ -337,6 +337,7 @@ void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 	AttachActorToRightHand(EquippedWeapon);
 	EquippedWeapon->SetOwner(Character);
 	EquippedWeapon->SetHUDAmmo();
+	EquippedWeapon->SetHUDWeapon();
 
 	PlayEquipWeaponSound(EquippedWeapon);
 	ReloadEmptyWeapon();

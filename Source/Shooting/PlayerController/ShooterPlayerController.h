@@ -17,6 +17,8 @@ class SHOOTING_API AShooterPlayerController : public APlayerController
 public:
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDWeaponAmmo(int32 Ammo);
+	void SetHUDWeaponName(FString WeaponName);
+	void SetHUDWeaponIcon(UTexture2D* WeaponIcon);
 	void SetHUDMatchCountdown(float CountdownTime);
 	void SetHUDAnnouncementCountdown(float CountdownTime);
 	virtual void OnPossess(APawn* InPawn) override;
@@ -59,4 +61,8 @@ private:
 
 	float HUDWeaponAmmo;
 	bool bInitializeWeaponAmmo = false;
+
+	FString HUDWeaponName;
+	class UTexture2D* HUDWeaponIcon;
+	bool bInitializeWeapon = false;
 };

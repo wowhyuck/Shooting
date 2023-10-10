@@ -7,6 +7,7 @@
 #include "Shooting/HUD/Announcement.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/GameMode/ShootingGameMode.h"
 #include "Kismet/GameplayStatics.h"
@@ -64,6 +65,11 @@ void AShooterPlayerController::PollInt()
 			{
 				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
+				if (bInitializeWeapon)
+				{
+					SetHUDWeaponName(HUDWeaponName);
+					SetHUDWeaponIcon(HUDWeaponIcon);
+				}
 			}
 		}
 	}
@@ -127,6 +133,43 @@ void AShooterPlayerController::SetHUDWeaponAmmo(int32 Ammo)
 	{
 		bInitializeWeaponAmmo = true;
 		HUDWeaponAmmo = Ammo;
+	}
+}
+
+void AShooterPlayerController::SetHUDWeaponName(FString WeaponName)
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+
+	bool bHUDValid = ShooterHUD &&
+		ShooterHUD->CharacterOverlay &&
+		ShooterHUD->CharacterOverlay->WeaponName;
+
+	if (bHUDValid)
+	{
+		ShooterHUD->CharacterOverlay->WeaponName->SetText(FText::FromString(WeaponName));
+	}
+	else
+	{
+		bInitializeWeapon = true;
+		HUDWeaponName = WeaponName;
+	}
+}
+
+void AShooterPlayerController::SetHUDWeaponIcon(UTexture2D* WeaponIcon)
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+
+	bool bHUDValid = ShooterHUD &&
+		ShooterHUD->CharacterOverlay &&
+		ShooterHUD->CharacterOverlay->WeaponIcon;
+	if (bHUDValid)
+	{
+		ShooterHUD->CharacterOverlay->WeaponIcon->SetBrushFromTexture(WeaponIcon);
+	}
+	else
+	{
+		bInitializeWeapon = true;
+		HUDWeaponIcon = WeaponIcon;
 	}
 }
 

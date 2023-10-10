@@ -80,6 +80,20 @@ void AWeapon::AddAmmo(int32 AmmoToAdd)
 	SetHUDAmmo();
 }
 
+void AWeapon::SetHUDWeapon()
+{
+	ShooterOwnerCharacter = ShooterOwnerCharacter == nullptr ? Cast<AShooterCharacter>(GetOwner()) : ShooterOwnerCharacter;
+	if (ShooterOwnerCharacter)
+	{
+		ShooterOwnerController = ShooterOwnerController == nullptr ? Cast<AShooterPlayerController>(ShooterOwnerCharacter->Controller) : ShooterOwnerController;
+		if (ShooterOwnerController)
+		{
+			ShooterOwnerController->SetHUDWeaponName(WeaponName);
+			ShooterOwnerController->SetHUDWeaponIcon(WeaponIcon);
+		}
+	}
+}
+
 void AWeapon::SetWeaponState(EWeaponState State)
 {
 	WeaponState = State;
