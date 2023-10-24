@@ -23,6 +23,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class USoundCue* ImpactSound;
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	float Health;
+
+	UPROPERTY(EditAnywhere)
+	float MaxHealth;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

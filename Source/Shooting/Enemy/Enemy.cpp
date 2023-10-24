@@ -6,7 +6,9 @@
 #include "Components/CapsuleComponent.h"
 
 
-AEnemy::AEnemy()
+AEnemy::AEnemy() :
+	Health(100.f),
+	MaxHealth(100.f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 

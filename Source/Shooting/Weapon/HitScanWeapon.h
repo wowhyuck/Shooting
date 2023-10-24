@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Damage = 20.f;
 
+	UPROPERTY(EditAnywhere)
+	float HeadDamage = 30.f;
+
 private:
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* BeamParticles;
