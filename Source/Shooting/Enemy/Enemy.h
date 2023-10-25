@@ -17,6 +17,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser) override;
+
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* ImpactParticles;
 

@@ -4,6 +4,7 @@
 #include "HitScanWeapon.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/Enemy/Enemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -29,12 +30,11 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		FHitResult FireHit;
 		WeaponTraceHit(Start, HitTarget, FireHit);
 
-		// TODO : 적이 몬스터일 때 바꾸기
-		AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(FireHit.GetActor());
-		if (ShooterCharacter)
+		AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+		if (HitEnemy)
 		{
 			UGameplayStatics::ApplyDamage(
-				ShooterCharacter,
+				HitEnemy,
 				Damage,
 				InstigatorController,
 				this,
