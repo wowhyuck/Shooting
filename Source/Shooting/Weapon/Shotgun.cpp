@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/Enemy/Enemy.h"
 #include "Sound/SoundCue.h"
 
 
@@ -24,21 +25,20 @@ void AShotgun::Fire(const FVector& HitTarget)
 		FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 		FVector Start = SocketTransform.GetLocation();
 
-		TMap<AShooterCharacter*, uint32> HitMap;
+		TMap<AEnemy*, uint32> HitMap;
 		for (uint32 i = 0; i < NumberOfPellets; i++)
 		{
 			FHitResult FireHit;
 			WeaponTraceHit(Start, HitTarget, FireHit);
 
-			// TODO : 적이 몬스터일 때 바꾸기
-			AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(FireHit.GetActor());
-			if (ShooterCharacter)
+			AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+			if (HitMap.Contains(HitEnemy))
 			{
-				HitMap[ShooterCharacter]++;
+				HitMap[HitEnemy]++;
 			}
 			else
 			{
-				HitMap.Emplace(ShooterCharacter, 1);
+				HitMap.Emplace(HitEnemy, 1);
 			}
 
 			if (ImpactParticles)
