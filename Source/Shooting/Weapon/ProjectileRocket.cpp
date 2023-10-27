@@ -9,6 +9,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/AudioComponent.h"
 #include "RocketMovementComponent.h"
+#include "Shooting/Character/ShooterCharacter.h"
 
 
 AProjectileRocket::AProjectileRocket()
@@ -74,6 +75,10 @@ void AProjectileRocket::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 		AController* FiringController = FiringPawn->GetController();
 		if (FiringController)
 		{
+			TArray<AActor*> IgnoreActors;
+			AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(GetOwner());
+			IgnoreActors.Add(ShooterCharacter);
+
 			UGameplayStatics::ApplyRadialDamageWithFalloff(
 				this,		// WorldContextObject
 				Damage,		// BaseDamage
@@ -83,7 +88,7 @@ void AProjectileRocket::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 				500.f,		// DamageOuterRadius
 				1.f,		// DamageFalloff
 				UDamageType::StaticClass(),		// DamageTypeClass
-				TArray<AActor*>(),		// IgnoreActors
+				IgnoreActors,		// IgnoreActors
 				this,		// DamageCauser
 				FiringController);		// InstigatorController
 		}
