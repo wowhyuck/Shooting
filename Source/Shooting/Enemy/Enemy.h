@@ -32,8 +32,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxHealth;
 
+	UPROPERTY(EditAnywhere)
+	FString HeadBone;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE FString GetHeadBone() const { return HeadBone; }
 };

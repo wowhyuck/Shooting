@@ -33,12 +33,26 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
 		if (HitEnemy)
 		{
-			UGameplayStatics::ApplyDamage(
-				HitEnemy,
-				Damage,
-				InstigatorController,
-				this,
-				UDamageType::StaticClass());
+			if (FireHit.BoneName.ToString() == HitEnemy->GetHeadBone())
+			{
+				// Head Shot
+				UGameplayStatics::ApplyDamage(
+					HitEnemy,
+					HeadDamage,
+					InstigatorController,
+					this,
+					UDamageType::StaticClass());
+			}
+			else
+			{
+				// Body Shot
+				UGameplayStatics::ApplyDamage(
+					HitEnemy,
+					Damage,
+					InstigatorController,
+					this,
+					UDamageType::StaticClass());
+			}
 		}
 
 		if (ImpactParticles)
