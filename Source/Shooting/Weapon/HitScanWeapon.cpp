@@ -33,26 +33,14 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
 		if (HitEnemy)
 		{
-			if (FireHit.BoneName.ToString() == HitEnemy->GetHeadBone())
-			{
-				// Head Shot
-				UGameplayStatics::ApplyDamage(
-					HitEnemy,
-					HeadDamage,
-					InstigatorController,
-					this,
-					UDamageType::StaticClass());
-			}
-			else
-			{
-				// Body Shot
-				UGameplayStatics::ApplyDamage(
-					HitEnemy,
-					Damage,
-					InstigatorController,
-					this,
-					UDamageType::StaticClass());
-			}
+			// 적이 맞은 곳이 head일 때 true, 아닐 때 false
+			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadDamage : Damage;
+			UGameplayStatics::ApplyDamage(
+				HitEnemy,
+				DamageToCause,
+				InstigatorController,
+				this,
+				UDamageType::StaticClass());
 		}
 
 		if (ImpactParticles)
