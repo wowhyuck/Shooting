@@ -31,9 +31,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 
+	UFUNCTION(BlueprintNativeEvent)
+	void ShowHealthBar();
+	void ShowHealthBar_Implementation();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HideHealthBar();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
+
+	UPROPERTY(EditAnywhere)
+	float HealthBarDisplayTime = 4.0f;
+
+	FTimerHandle HealthBarTimer;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

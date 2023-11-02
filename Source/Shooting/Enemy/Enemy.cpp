@@ -35,9 +35,21 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	else
 	{
 		Health -= DamageAmount;
+		ShowHealthBar();
 	}
 	return DamageAmount;
 }
+
+void AEnemy::ShowHealthBar_Implementation()
+{
+	GetWorldTimerManager().ClearTimer(HealthBarTimer);
+	GetWorldTimerManager().SetTimer(
+		HealthBarTimer,
+		this,
+		&AEnemy::HideHealthBar,
+		HealthBarDisplayTime);
+}
+
 
 void AEnemy::Tick(float DeltaTime)
 {
