@@ -14,6 +14,7 @@ class SHOOTING_API AEnemy : public ACharacter
 public:
 	AEnemy();
 
+	void Die();
 protected:
 	virtual void BeginPlay() override;
 
