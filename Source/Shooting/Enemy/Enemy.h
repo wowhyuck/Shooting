@@ -42,6 +42,8 @@ protected:
 
 	void PlayHitMontage(FName Section, float PlayRate = 1.0f);
 
+	void ResetHitReactTimer();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -54,9 +56,21 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* HitMontage; 
 
+	FTimerHandle HitReactTimer;
+	bool bCanHitReact = true;
+
+	UPROPERTY(EditAnywhere)
+	float HitReactTimerMin = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+	float HitReactTimerMax = 1.0f;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE FString GetHeadBone() const { return HeadBone; }
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowHitNumber(int32 Damage, FVector HitLocation);
 };

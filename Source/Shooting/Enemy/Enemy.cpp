@@ -59,12 +59,28 @@ void AEnemy::ShowHealthBar_Implementation()
 
 void AEnemy::PlayHitMontage(FName Section, float PlayRate)
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance)
+	if (bCanHitReact)
 	{
-		AnimInstance->Montage_Play(HitMontage, PlayRate);
-		AnimInstance->Montage_JumpToSection(Section, HitMontage);
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance)
+		{
+			AnimInstance->Montage_Play(HitMontage, PlayRate);
+			AnimInstance->Montage_JumpToSection(Section, HitMontage);
+		}
+
+		bCanHitReact = false;
+		const float HitReactTime = FMath::FRandRange(HitReactTimerMin, HitReactTimerMax);
+		GetWorldTimerManager().SetTimer(
+			HitReactTimer,
+			this,
+			&AEnemy::ResetHitReactTimer,
+			HitReactTime);
 	}
+}
+
+void AEnemy::ResetHitReactTimer()
+{
+	bCanHitReact = true;
 }
 
 
