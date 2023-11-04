@@ -34,6 +34,8 @@ void AEnemy::BeginPlay()
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser)
 {
 	PlayHitMontage(FName("HitReactFront"));
+	ShowHitNumber(DamageAmount, this->GetActorLocation());
+
 	if (Health - DamageAmount <= 0.f)
 	{
 		Health = 0.f;
