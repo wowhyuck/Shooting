@@ -14,7 +14,6 @@ class SHOOTING_API AEnemy : public ACharacter
 public:
 	AEnemy();
 
-	void Die();
 protected:
 	virtual void BeginPlay() override;
 
@@ -32,12 +31,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 
+	void Die();
+
 	UFUNCTION(BlueprintNativeEvent)
 	void ShowHealthBar();
 	void ShowHealthBar_Implementation();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void HideHealthBar();
+
+	void PlayHitMontage(FName Section, float PlayRate = 1.0f);
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -47,6 +50,9 @@ private:
 	float HealthBarDisplayTime = 4.0f;
 
 	FTimerHandle HealthBarTimer;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* HitMontage; 
 
 public:	
 	virtual void Tick(float DeltaTime) override;

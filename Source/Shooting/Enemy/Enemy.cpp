@@ -33,6 +33,7 @@ void AEnemy::BeginPlay()
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser)
 {
+	PlayHitMontage(FName("HitReactFront"));
 	if (Health - DamageAmount <= 0.f)
 	{
 		Health = 0.f;
@@ -54,6 +55,16 @@ void AEnemy::ShowHealthBar_Implementation()
 		this,
 		&AEnemy::HideHealthBar,
 		HealthBarDisplayTime);
+}
+
+void AEnemy::PlayHitMontage(FName Section, float PlayRate)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Play(HitMontage, PlayRate);
+		AnimInstance->Montage_JumpToSection(Section, HitMontage);
+	}
 }
 
 
