@@ -44,6 +44,9 @@ protected:
 
 	void ResetHitReactTimer();
 
+	UFUNCTION(BlueprintCallable)
+	void StoreHitNumber(UUserWidget* HitNumber);
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -64,6 +67,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float HitReactTimerMax = 1.0f;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<UUserWidget*> HitNumbers;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
