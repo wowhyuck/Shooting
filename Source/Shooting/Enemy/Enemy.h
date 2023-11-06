@@ -47,6 +47,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StoreHitNumber(UUserWidget* HitNumber);
 
+	UFUNCTION()
+	void DestroyHitNumber(UUserWidget* HitNumber);
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -70,6 +73,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<UUserWidget*> HitNumbers;
+
+	UPROPERTY(EditAnywhere)
+	float HitNumberDestroyTime = 0.5f;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

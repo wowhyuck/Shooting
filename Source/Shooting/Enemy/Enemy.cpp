@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Blueprint/UserWidget.h"
 
 
 AEnemy::AEnemy() :
@@ -88,6 +89,22 @@ void AEnemy::ResetHitReactTimer()
 void AEnemy::StoreHitNumber(UUserWidget* HitNumber)
 {
 	HitNumbers.Add(HitNumber);
+
+	FTimerHandle HitNumberTimer;
+	FTimerDelegate HitNumberDelegate;
+	HitNumberDelegate.BindUFunction(this, FName("DestroyHitNumber"), HitNumber);
+	GetWorld()->GetTimerManager().SetTimer(
+		HitNumberTimer,
+		HitNumberDelegate,
+		HitNumberDestroyTime,
+		false);
+
+}
+
+void AEnemy::DestroyHitNumber(UUserWidget* HitNumber)
+{
+	HitNumbers.Remove(HitNumber);
+	HitNumber->RemoveFromParent();
 }
 
 void AEnemy::Tick(float DeltaTime)
