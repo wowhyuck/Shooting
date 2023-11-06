@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AEnemy::AEnemy() :
@@ -35,7 +36,9 @@ void AEnemy::BeginPlay()
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser)
 {
 	PlayHitMontage(FName("HitReactFront"));
-	ShowHitNumber(DamageAmount, this->GetActorLocation());
+
+	FVector HitWidgetLocation = this->GetActorLocation() + FVector(0.f, 0.f, 40.f);
+	ShowHitNumber(DamageAmount, HitWidgetLocation);
 
 	if (Health - DamageAmount <= 0.f)
 	{
@@ -107,10 +110,26 @@ void AEnemy::DestroyHitNumber(UUserWidget* HitNumber)
 	HitNumber->RemoveFromParent();
 }
 
+void AEnemy::UpdateHitNumbers()
+{
+	for (auto& HitNumber : HitNumbers)
+	{
+		FVector2D ScreenPosition;
+		FVector HitWidgetLocation = this->GetActorLocation() + FVector(0.f, 0.f, 40.f);
+
+		UGameplayStatics::ProjectWorldToScreen(
+			GetWorld()->GetFirstPlayerController(),
+			HitWidgetLocation,
+			ScreenPosition);
+		HitNumber->SetPositionInViewport(ScreenPosition);
+	}
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateHitNumbers();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
