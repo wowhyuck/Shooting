@@ -79,6 +79,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float HitNumberDestroyTime = 0.5f;
 
+	UPROPERTY(EditAnywhere)
+	class UBehaviorTree* BehaviorTree;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -87,4 +90,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowHitNumber(int32 Damage, FVector HitLocation);
+
+	FORCEINLINE UBehaviorTree* GetBehaviorTree() const { return BehaviorTree; }
 };
