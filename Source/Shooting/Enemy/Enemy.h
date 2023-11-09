@@ -52,6 +52,8 @@ protected:
 
 	void UpdateHitNumbers();
 
+	void MoveToShooter();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -81,6 +83,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UBehaviorTree* BehaviorTree;
+
+	class AEnemyController* EnemyController;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

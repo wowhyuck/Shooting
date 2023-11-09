@@ -6,6 +6,10 @@
 #include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "EnemyController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Shooting/Character/ShooterCharacter.h"
 
 
 AEnemy::AEnemy() :
@@ -30,6 +34,13 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// AI 컨트롤러
+	EnemyController = Cast<AEnemyController>(GetController());
+
+	if (EnemyController)
+	{
+		EnemyController->RunBehaviorTree(BehaviorTree);
+	}
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser)
@@ -124,11 +135,24 @@ void AEnemy::UpdateHitNumbers()
 	}
 }
 
+void AEnemy::MoveToShooter()
+{
+	auto Character = Cast<AShooterCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Character)
+	{
+		// Blackboard의 "Target" Key에 Value 세팅하기
+		EnemyController->GetBlackboardComponent()->SetValueAsObject(
+			TEXT("Target"),
+			Character);
+	}
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	UpdateHitNumbers();
+	MoveToShooter();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
