@@ -14,6 +14,9 @@ class SHOOTING_API AEnemy : public ACharacter
 public:
 	AEnemy();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bStunned = false;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -85,6 +88,10 @@ private:
 	class UBehaviorTree* BehaviorTree;
 
 	class AEnemyController* EnemyController;
+
+	// StunChance = 0 : 기절 확률 0%, = 1 : 기절 확률 100% 
+	UPROPERTY(EditAnywhere)
+	float StunChance = 0.5f;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
