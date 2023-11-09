@@ -57,6 +57,9 @@ protected:
 
 	void MoveToShooter();
 
+	UFUNCTION(BlueprintCallable)
+	void SetStunned(bool Stunned);
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;

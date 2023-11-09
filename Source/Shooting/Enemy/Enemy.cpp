@@ -49,7 +49,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	if (Stunned <= StunChance)
 	{
 		PlayHitMontage(FName("HitReactFront"));
-		bStunned = true;
+		SetStunned(true);
 	}
 
 	FVector HitWidgetLocation = this->GetActorLocation() + FVector(0.f, 0.f, 40.f);
@@ -149,6 +149,18 @@ void AEnemy::MoveToShooter()
 		EnemyController->GetBlackboardComponent()->SetValueAsObject(
 			TEXT("Target"),
 			Character);
+	}
+}
+
+void AEnemy::SetStunned(bool Stunned)
+{
+	bStunned = Stunned;
+
+	if (EnemyController)
+	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(
+			TEXT("Stunned"),
+			bStunned);
 	}
 }
 
