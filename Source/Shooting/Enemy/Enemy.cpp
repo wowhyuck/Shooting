@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemyController.h"
@@ -23,6 +24,10 @@ AEnemy::AEnemy() :
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetGenerateOverlapEvents(true);
+
+	// CombatRangeSphere 생성하기
+	CombatRangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatRange"));
+	CombatRangeSphere->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::Die()
@@ -34,6 +39,13 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CombatRangeSphere->OnComponentBeginOverlap.AddDynamic(
+		this,
+		&AEnemy::CombatRangeOverlap);
+	CombatRangeSphere->OnComponentEndOverlap.AddDynamic(
+		this,
+		&AEnemy::CombatRangeEndOverlap);
+
 	// AI 컨트롤러
 	EnemyController = Cast<AEnemyController>(GetController());
 
@@ -172,9 +184,40 @@ void AEnemy::Tick(float DeltaTime)
 	MoveToShooter();
 }
 
+void AEnemy::CombatRangeOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor == nullptr) return;
+	auto ShooterCharacter = Cast<AShooterCharacter>(OtherActor);
+	if (ShooterCharacter)
+	{
+		bInAttackRange = true;
+		if (EnemyController)
+		{
+			EnemyController->GetBlackboardComponent()->SetValueAsBool(
+				TEXT("InAttackRange"),
+				true);
+		}
+	}
+}
+
+void AEnemy::CombatRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor == nullptr) return;
+	auto ShooterCharacter = Cast<AShooterCharacter>(OtherActor);
+	if (ShooterCharacter)
+	{
+		bInAttackRange = false;
+		if (EnemyController)
+		{
+			EnemyController->GetBlackboardComponent()->SetValueAsBool(
+				TEXT("InAttackRange"),
+				false);
+		}
+	}
+}
+
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-

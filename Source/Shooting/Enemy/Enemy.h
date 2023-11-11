@@ -14,9 +14,6 @@ class SHOOTING_API AEnemy : public ACharacter
 public:
 	AEnemy();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bStunned = false;
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,6 +30,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bStunned = false;
+
+	// 플레이어가 공격 범위 안에 들어올 때 true, 공격 시작 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bInAttackRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USphereComponent* CombatRangeSphere;
 
 	void Die();
 
@@ -59,6 +66,22 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SetStunned(bool Stunned);
+
+	UFUNCTION()
+	void CombatRangeOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void CombatRangeEndOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
 
 private:
 	UPROPERTY(EditAnywhere)
