@@ -52,6 +52,8 @@ protected:
 
 	void PlayHitMontage(FName Section, float PlayRate = 1.0f);
 
+	void PlayAttackMontage(FName Section, float PlayRate = 1.0f);
+
 	void ResetHitReactTimer();
 
 	UFUNCTION(BlueprintCallable)
@@ -118,6 +120,15 @@ private:
 	// StunChance = 0 : 기절 확률 0%, = 1 : 기절 확률 100% 
 	UPROPERTY(EditAnywhere)
 	float StunChance = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* AttackMontage;
+
+	// Attack Montage의 섹션 이름
+	FName AttackLFast = TEXT("AttackLFast");
+	FName AttacRFast = TEXT("AttackRFast");
+	FName AttacL = TEXT("AttackL");
+	FName AttacR = TEXT("AttackR");
 
 public:	
 	virtual void Tick(float DeltaTime) override;

@@ -111,6 +111,16 @@ void AEnemy::PlayHitMontage(FName Section, float PlayRate)
 	}
 }
 
+void AEnemy::PlayAttackMontage(FName Section, float PlayRate)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage, PlayRate);
+		AnimInstance->Montage_JumpToSection(Section, AttackMontage);
+	}
+}
+
 void AEnemy::ResetHitReactTimer()
 {
 	bCanHitReact = true;
