@@ -226,6 +226,28 @@ void AEnemy::CombatRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 }
 
+FName AEnemy::GetAttackSectionName()
+{
+	FName SectionName;
+	const int32 Section{ FMath::RandRange(1, 4) };
+	switch (Section)
+	{
+	case 1:
+		SectionName = AttackLFast;
+		break;
+	case 2:
+		SectionName = AttackRFast;
+		break;
+	case 3:
+		SectionName = AttackL;
+		break;
+	case 4:
+		SectionName = AttackR;
+		break;
+	}
+	return SectionName;
+}
+
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

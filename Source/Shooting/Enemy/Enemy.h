@@ -85,6 +85,9 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 
+	UFUNCTION(BlueprintPure)
+	FName GetAttackSectionName();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -126,9 +129,9 @@ private:
 
 	// Attack Montage의 섹션 이름
 	FName AttackLFast = TEXT("AttackLFast");
-	FName AttacRFast = TEXT("AttackRFast");
-	FName AttacL = TEXT("AttackL");
-	FName AttacR = TEXT("AttackR");
+	FName AttackRFast = TEXT("AttackRFast");
+	FName AttackL = TEXT("AttackL");
+	FName AttackR = TEXT("AttackR");
 
 public:	
 	virtual void Tick(float DeltaTime) override;
