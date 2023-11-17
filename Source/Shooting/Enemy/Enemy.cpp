@@ -12,6 +12,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Sound/SoundCue.h"
 
 
 AEnemy::AEnemy() :
@@ -290,6 +291,14 @@ void AEnemy::DoDamage(AActor* Victim)
 			EnemyController,
 			this,
 			UDamageType::StaticClass());
+
+		if (Character->GetMeleeImpactSound())
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				Character->GetMeleeImpactSound(),
+				GetActorLocation());
+		}
 	}
 }
 

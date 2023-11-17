@@ -34,6 +34,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundCue* MeleeImpactSound;
+
 	/* 캐릭터 이동 & 회전 함수 */
 	virtual void Jump() override;
 	void MoveForward(float Value);
@@ -137,4 +140,5 @@ public:
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
 	FORCEINLINE bool IsDead() const { return bDead; }
+	FORCEINLINE USoundCue* GetMeleeImpactSound() const { return MeleeImpactSound; }
 }; 
