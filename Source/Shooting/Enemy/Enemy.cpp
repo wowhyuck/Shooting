@@ -278,12 +278,29 @@ FName AEnemy::GetAttackSectionName()
 	return SectionName;
 }
 
+void AEnemy::DoDamage(AActor* Victim)
+{
+	if (Victim == nullptr) return;
+	auto Character = Cast<AShooterCharacter>(Victim);
+	if (Character)
+	{
+		UGameplayStatics::ApplyDamage(
+			Character,
+			BaseDamage,
+			EnemyController,
+			this,
+			UDamageType::StaticClass());
+	}
+}
+
 void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	DoDamage(OtherActor);
 }
 
 void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	DoDamage(OtherActor);
 }
 
 void AEnemy::ActiveLeftWeapon()

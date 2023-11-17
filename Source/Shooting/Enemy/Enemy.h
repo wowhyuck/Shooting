@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UBoxComponent* RightWeaponCollision;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BaseDamage = 20.f;
+
 	void Die();
 
 	UFUNCTION(BlueprintNativeEvent)
@@ -122,6 +125,8 @@ protected:
 	void ActiveRightWeapon();
 	UFUNCTION(BlueprintCallable)
 	void DeactiveRightWeapon();
+
+	void DoDamage(AActor* Victim);
 
 private:
 	UPROPERTY(EditAnywhere)
