@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemyController.h"
@@ -28,6 +29,12 @@ AEnemy::AEnemy() :
 	// CombatRangeSphere 생성하기
 	CombatRangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatRange"));
 	CombatRangeSphere->SetupAttachment(GetRootComponent());
+
+	// 왼쪽, 오른쪽 무기에 Collision Box 붙이기
+	LeftWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Left Weapon Box"));
+	LeftWeaponCollision->SetupAttachment(GetMesh(), FName("LeftWeaponBone"));
+	RightWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Right Weapon Box"));
+	RightWeaponCollision->SetupAttachment(GetMesh(), FName("RightWeaponBone"));
 }
 
 void AEnemy::Die()
@@ -45,6 +52,29 @@ void AEnemy::BeginPlay()
 	CombatRangeSphere->OnComponentEndOverlap.AddDynamic(
 		this,
 		&AEnemy::CombatRangeEndOverlap);
+
+	// 무기 Collision Box와 오버랩했을 때 실행될 함수와 연결
+	LeftWeaponCollision->OnComponentBeginOverlap.AddDynamic(
+		this,
+		&AEnemy::OnLeftWeaponOverlap);
+	RightWeaponCollision->OnComponentBeginOverlap.AddDynamic(
+		this,
+		&AEnemy::OnRightWeaponOverlap);
+
+	// 무기 Collision Box의 Collision Preset 설정하기
+	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LeftWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	LeftWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	LeftWeaponCollision->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Pawn,
+		ECollisionResponse::ECR_Overlap);
+
+	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	RightWeaponCollision->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Pawn,
+		ECollisionResponse::ECR_Overlap);
 
 	// AI 컨트롤러
 	EnemyController = Cast<AEnemyController>(GetController());
@@ -247,6 +277,15 @@ FName AEnemy::GetAttackSectionName()
 	}
 	return SectionName;
 }
+
+void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

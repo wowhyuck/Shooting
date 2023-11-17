@@ -41,6 +41,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USphereComponent* CombatRangeSphere;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UBoxComponent* LeftWeaponCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UBoxComponent* RightWeaponCollision;
+
 	void Die();
 
 	UFUNCTION(BlueprintNativeEvent)
@@ -89,6 +95,23 @@ protected:
 	UFUNCTION(BlueprintPure)
 	FName GetAttackSectionName();
 
+	UFUNCTION()
+	void OnLeftWeaponOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnRightWeaponOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
