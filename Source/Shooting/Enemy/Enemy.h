@@ -112,6 +112,17 @@ protected:
 		int32 OtherBodyIndex,
 		bool bFromSweep,
 		const FHitResult& SweepResult);
+
+	// Weapon Box의 충돌 활성/비활성
+	UFUNCTION(BlueprintCallable)
+	void ActiveLeftWeapon();
+	UFUNCTION(BlueprintCallable)
+	void DeactiveLeftWeapon();
+	UFUNCTION(BlueprintCallable)
+	void ActiveRightWeapon();
+	UFUNCTION(BlueprintCallable)
+	void DeactiveRightWeapon();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
