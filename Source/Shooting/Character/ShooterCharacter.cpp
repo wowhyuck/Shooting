@@ -14,6 +14,8 @@
 #include "Shooting/PlayerController/ShooterPlayerController.h"
 #include "Shooting/Weapon/Weapon.h"
 #include "Shooting/GameMode/ShootingGameMode.h"
+#include "Shooting/Enemy/EnemyController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 AShooterCharacter::AShooterCharacter()
@@ -342,6 +344,14 @@ void AShooterCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const 
 	{
 		Health = 0.f;
 		Die();
+
+		auto EnemyController = Cast<AEnemyController>(InstigatorController);
+		if (EnemyController)
+		{
+			EnemyController->GetBlackboardComponent()->SetValueAsBool(
+				FName("CharacterDead"),
+				true);
+		}
 	}
 	else
 	{

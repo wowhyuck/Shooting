@@ -26,6 +26,7 @@ public:
 	void PlaySwapMontage();
 	void PlayDieMontage();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bDisableGameplay = false;
 
 	UFUNCTION(BlueprintImplementableEvent)
