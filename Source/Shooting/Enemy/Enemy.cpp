@@ -82,6 +82,13 @@ void AEnemy::BeginPlay()
 
 	if (EnemyController)
 	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(
+			FName("CanAttack"),
+			true);
+	}
+
+	if (EnemyController)
+	{
 		EnemyController->RunBehaviorTree(BehaviorTree);
 	}
 }
@@ -149,6 +156,19 @@ void AEnemy::PlayAttackMontage(FName Section, float PlayRate)
 	{
 		AnimInstance->Montage_Play(AttackMontage, PlayRate);
 		AnimInstance->Montage_JumpToSection(Section, AttackMontage);
+	}
+
+	bCanAttack = false;
+	GetWorldTimerManager().SetTimer(
+		AttackWaitTimer,
+		this,
+		&AEnemy::ResetCanAttack,
+		AttackWaitTime);
+	if (EnemyController)
+	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(
+			FName("CanAttack"),
+			false);
 	}
 }
 
@@ -299,6 +319,17 @@ void AEnemy::DoDamage(AActor* Victim)
 				Character->GetMeleeImpactSound(),
 				GetActorLocation());
 		}
+	}
+}
+
+void AEnemy::ResetCanAttack()
+{
+	bCanAttack = true;
+	if (EnemyController)
+	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(
+			FName("CanAttack"),
+			true);
 	}
 }
 

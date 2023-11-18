@@ -128,6 +128,8 @@ protected:
 
 	void DoDamage(AActor* Victim);
 
+	void ResetCanAttack();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -172,6 +174,14 @@ private:
 	FName AttackRFast = TEXT("AttackRFast");
 	FName AttackL = TEXT("AttackL");
 	FName AttackR = TEXT("AttackR");
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanAttack = true;
+
+	FTimerHandle AttackWaitTimer;
+
+	UPROPERTY(EditAnywhere)
+	float AttackWaitTime = 1.f;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
