@@ -133,6 +133,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishDeath();
 
+	UFUNCTION()
+	void DestroyEnemy();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -190,6 +193,10 @@ private:
 	UAnimMontage* DeathMontage;
 
 	bool bDying = false;
+	FTimerHandle DeathTimer;
+
+	UPROPERTY(EditAnywhere)
+	float DeathTime = 3.0f;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

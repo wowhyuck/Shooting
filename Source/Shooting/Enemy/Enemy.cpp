@@ -112,13 +112,6 @@ void AEnemy::BeginPlay()
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventIntigator, AActor* DamageCauser)
 {
-	const float Stunned = FMath::FRandRange(0.f, 1.f);
-	if (Stunned <= StunChance)
-	{
-		PlayHitMontage(FName("HitReactFront"));
-		SetStunned(true);
-	}
-
 	FVector HitWidgetLocation = this->GetActorLocation() + FVector(0.f, 0.f, 40.f);
 	ShowHitNumber(DamageAmount, HitWidgetLocation);
 
@@ -132,6 +125,17 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		Health -= DamageAmount;
 		ShowHealthBar();
 	}
+
+	if (!bDying)
+	{
+		const float Stunned = FMath::FRandRange(0.f, 1.f);
+		if (Stunned <= StunChance)
+		{
+			PlayHitMontage(FName("HitReactFront"));
+			SetStunned(true);
+		}
+	}
+
 	return DamageAmount;
 }
 
@@ -351,6 +355,17 @@ void AEnemy::ResetCanAttack()
 }
 
 void AEnemy::FinishDeath()
+{
+	GetMesh()->bPauseAnims = true;
+
+	GetWorldTimerManager().SetTimer(
+		DeathTimer,
+		this,
+		&AEnemy::DestroyEnemy,
+		DeathTime);
+}
+
+void AEnemy::DestroyEnemy()
 {
 	Destroy();
 }
