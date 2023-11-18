@@ -130,6 +130,9 @@ protected:
 
 	void ResetCanAttack();
 
+	UFUNCTION(BlueprintCallable)
+	void FinishDeath();
+
 private:
 	UPROPERTY(EditAnywhere)
 	FString HeadBone;
@@ -182,6 +185,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float AttackWaitTime = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* DeathMontage;
+
+	bool bDying = false;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

@@ -40,7 +40,24 @@ AEnemy::AEnemy() :
 
 void AEnemy::Die()
 {
+	if (bDying) return;
+	bDying = true;
+
 	HideHealthBar();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+	}
+
+	if (EnemyController)
+	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(
+			FName("Dead"),
+			true);
+		EnemyController->StopMovement();
+	}
 }
 
 void AEnemy::BeginPlay()
@@ -331,6 +348,11 @@ void AEnemy::ResetCanAttack()
 			FName("CanAttack"),
 			true);
 	}
+}
+
+void AEnemy::FinishDeath()
+{
+	Destroy();
 }
 
 void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
