@@ -45,6 +45,9 @@ void AEnemy::Die()
 
 	HideHealthBar();
 
+	// 죽을 때, Enemy의 충돌에서 Pawn은 Ignore로 설정하기
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && DeathMontage)
 	{
@@ -56,6 +59,7 @@ void AEnemy::Die()
 		EnemyController->GetBlackboardComponent()->SetValueAsBool(
 			FName("Dead"),
 			true);
+
 		EnemyController->StopMovement();
 	}
 }
