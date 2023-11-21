@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WeaponType.h"
+#include "Engine/DataTable.h"
 #include "Weapon.generated.h"
 
 
@@ -17,6 +18,40 @@ enum class EWeaponState : uint8
 	EWS_EquippedSecondary UMETA(DisplayName = "Equipped Secondary"),
 
 	EWS_MAX UMETA(DisplayName = "DefaultMax")
+};
+
+
+USTRUCT(BlueprintType)
+struct FWeaponTable : public FTableRowBase
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString WeaponName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* WeaponIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundCue* EquipSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MagCapacity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamagePerLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MagCapacityPerLevel;
 };
 
 UCLASS()
@@ -65,7 +100,7 @@ public:
 
 	// 무기 장착 소리
 	UPROPERTY(EditAnywhere)
-	class USoundCue* EquipSound;
+	USoundCue* EquipSound;
 
 protected:
 	virtual void BeginPlay() override;
@@ -74,6 +109,10 @@ protected:
 	virtual void OnWeaponStateSet();
 	virtual void OnEquipped();
 	virtual void OnEquippedSecondary();
+
+	// 무기 데이터 테이블
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UDataTable* WeaponDataTable;
 
 private:
 	UPROPERTY()
@@ -105,12 +144,19 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	class UAnimationAsset* FireAnimation;
 
-	/* 탄약 관련 변수*/
+	/* 탄약 관련 변수 */
 	UPROPERTY(EditAnywhere)
 	int32 Ammo;
 
 	UPROPERTY(EditAnywhere)
 	int32 MagCapacity;
+
+	/* 레벨 관련 변수 */
+	int32 WeaponLevel;
+
+	float DamagePerLevel;
+
+	int32 MagCapacityPerLevel;
 
 	// 사격했을 때 탄약 감소
 	void SpendRound();
