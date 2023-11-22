@@ -30,6 +30,47 @@ void AWeapon::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AWeapon::OnConstruction(const FTransform& Transform)
+{
+	const FString WeaponTablePath{ TEXT("DataTable'/Game/_Game/DataTable/WeaponDataTable.WeaponDataTable'") };
+	UDataTable* WeaponTableObject = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *WeaponTablePath));
+	
+	if (WeaponTableObject)
+	{
+		FWeaponDataTable* WeaponDataRow = nullptr;
+		switch (WeaponType)
+		{
+		case EWeaponType::EWT_AssultRifle:
+			WeaponDataRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName("AssultRifle"), TEXT(""));
+			break;
+
+		case EWeaponType::EWT_SniperRifle:
+			WeaponDataRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName("SniperRifle"), TEXT(""));
+			break;
+
+		case EWeaponType::EWT_Shotgun:
+			WeaponDataRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName("Shotgun"), TEXT(""));
+			break;
+
+		case EWeaponType::EWT_RocketLauncher:
+			WeaponDataRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName("RocketLauncher"), TEXT(""));
+			break;
+		}
+
+		if (WeaponDataRow)
+		{
+			WeaponName = WeaponDataRow->WeaponName;
+			WeaponIcon = WeaponDataRow->WeaponIcon;
+			EquipSound = WeaponDataRow->EquipSound;
+			SetDamage(WeaponDataRow->Damage);
+			MagCapacity = WeaponDataRow->MagCapacity;
+			Ammo = WeaponDataRow->Ammo;
+			DamagePerLevel = WeaponDataRow->DamagePerLevel;
+			MagCapacityPerLevel = WeaponDataRow->MagCapacityPerLevel;
+		}
+	}
+}
+
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

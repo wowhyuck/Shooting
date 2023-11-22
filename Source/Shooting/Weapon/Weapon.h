@@ -22,7 +22,7 @@ enum class EWeaponState : uint8
 
 
 USTRUCT(BlueprintType)
-struct FWeaponTable : public FTableRowBase
+struct FWeaponDataTable : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -31,9 +31,6 @@ struct FWeaponTable : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* WeaponIcon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USoundCue* EquipSound;
@@ -105,6 +102,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	/* 무기 장착 상태에 따른 함수 */
 	virtual void OnWeaponStateSet();
 	virtual void OnEquipped();
@@ -146,13 +145,16 @@ private:
 
 	/* 탄약 관련 변수 */
 	UPROPERTY(EditAnywhere)
+	float Damage;
+
+	UPROPERTY(EditAnywhere)
 	int32 Ammo;
 
 	UPROPERTY(EditAnywhere)
 	int32 MagCapacity;
 
 	/* 레벨 관련 변수 */
-	int32 WeaponLevel;
+	int32 WeaponLevel = 1;
 
 	float DamagePerLevel;
 
@@ -173,4 +175,6 @@ public:
 	FORCEINLINE void SetAmmo(int32 AmmoAmount) { Ammo = AmmoAmount; }
 	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
 	FORCEINLINE bool IsEmpty() const { return Ammo == 0; }
+	FORCEINLINE float GetDamage() const { return Damage; }
+	FORCEINLINE void SetDamage(float DamageAmount) { Damage = DamageAmount; }
 };
