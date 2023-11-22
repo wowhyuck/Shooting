@@ -79,7 +79,7 @@ void AShotgun::Fire(const FVector& HitTarget)
 		{
 			if (HitPair.Key && InstigatorController)
 			{
-				DamageMap.Emplace(HitPair.Key, HitPair.Value * Damage);
+				DamageMap.Emplace(HitPair.Key, HitPair.Value * GetDamage());
 
 				HitEnemies.AddUnique(HitPair.Key);
 			}
@@ -91,6 +91,7 @@ void AShotgun::Fire(const FVector& HitTarget)
 		{
 			if (HeadShotHitPair.Key)
 			{
+				HeadDamage = GetDamage() * 1.5f;
 				if (DamageMap.Contains(HeadShotHitPair.Key)) DamageMap[HeadShotHitPair.Key] += HeadShotHitPair.Value * HeadDamage;
 				else DamageMap.Emplace(HeadShotHitPair.Key, HeadShotHitPair.Value * HeadDamage);
 

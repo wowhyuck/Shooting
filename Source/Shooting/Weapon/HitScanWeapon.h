@@ -28,8 +28,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class USoundCue* HitSound;
 
-	UPROPERTY(EditAnywhere)
-	float Damage = 20.f;
+	//UPROPERTY(EditAnywhere)
+	//float Damage = 20.f;
 
 	UPROPERTY(EditAnywhere)
 	float HeadDamage = 30.f;

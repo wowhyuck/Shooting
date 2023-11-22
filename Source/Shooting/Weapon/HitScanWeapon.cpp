@@ -31,10 +31,12 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		WeaponTraceHit(Start, HitTarget, FireHit);
 
 		AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+		HeadDamage = GetDamage() * 2.0f;
+
 		if (HitEnemy)
 		{
 			// 적이 맞은 곳이 head일 때 true, 아닐 때 false
-			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadDamage : Damage;
+			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadDamage : GetDamage();
 			UGameplayStatics::ApplyDamage(
 				HitEnemy,
 				DamageToCause,
