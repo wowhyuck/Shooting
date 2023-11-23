@@ -16,7 +16,7 @@ class SHOOTING_API AProjectileWeapon : public AWeapon
 	
 public:
 	virtual void Fire(const FVector& HitTarget) override;
-	
+
 private:
 	// 해당 무기의 총알 클래스
 	UPROPERTY(EditAnywhere)

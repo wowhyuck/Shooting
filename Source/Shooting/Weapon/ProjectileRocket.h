@@ -55,4 +55,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float DestroyTime = 3.f;
+
+	bool bOnHit = false;
 };

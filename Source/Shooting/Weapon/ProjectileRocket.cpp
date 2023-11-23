@@ -10,6 +10,7 @@
 #include "Components/AudioComponent.h"
 #include "RocketMovementComponent.h"
 #include "Shooting/Character/ShooterCharacter.h"
+#include "Shooting/Weapon/Weapon.h"
 
 
 AProjectileRocket::AProjectileRocket()
@@ -64,6 +65,8 @@ void AProjectileRocket::DestroyTimerFinished()
 
 void AProjectileRocket::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (bOnHit) return;
+
 	if (OtherActor == GetOwner())
 	{
 		return;
@@ -78,15 +81,14 @@ void AProjectileRocket::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 			TArray<AActor*> IgnoreActors;
 			AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(GetOwner());
 			IgnoreActors.Add(ShooterCharacter);
+			AWeapon* EquippedWeapon = ShooterCharacter->GetEquippedWeapon();
+			Damage = EquippedWeapon->GetDamage();
 
-			UGameplayStatics::ApplyRadialDamageWithFalloff(
+			UGameplayStatics::ApplyRadialDamage(
 				this,		// WorldContextObject
 				Damage,		// BaseDamage
-				10.f,		// MinimumDamage
 				GetActorLocation(),		// Origin
-				200.f,		// DamageInnerRadius
-				500.f,		// DamageOuterRadius
-				1.f,		// DamageFalloff
+				500.f,		// DamageRadius
 				UDamageType::StaticClass(),		// DamageTypeClass
 				IgnoreActors,		// IgnoreActors
 				this,		// DamageCauser
@@ -124,6 +126,8 @@ void AProjectileRocket::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	{
 		ProjectileLoopComponent->Stop();
 	}
+
+	bOnHit = true;
 }
 
 void AProjectileRocket::Destroyed()

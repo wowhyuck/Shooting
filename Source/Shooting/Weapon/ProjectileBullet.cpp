@@ -2,6 +2,8 @@
 
 
 #include "ProjectileBullet.h"
+#include "Shooting/Weapon/Weapon.h"
+#include "Shooting/Character/ShooterCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -15,17 +17,20 @@ AProjectileBullet::AProjectileBullet()
 
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+	AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(GetOwner());
+	AWeapon* EquippedWeapon = ShooterCharacter->GetEquippedWeapon();
+	Damage = EquippedWeapon->GetDamage();
+	HeadDamage = Damage * 1.5f;
 
-	if (OwnerCharacter)
+	if (ShooterCharacter)
 	{
-		AController* OwnerController = OwnerCharacter->Controller;
-		if (OwnerController)
+		AController* ShooterController = ShooterCharacter->Controller;
+		if (ShooterController)
 		{
 			// 적이 맞은 곳이 head일 때 true, 아닐 때 false
 			const float DamageToCause = Hit.BoneName.ToString() == FString("head") ? HeadDamage : Damage;
 
-			UGameplayStatics::ApplyDamage(OtherActor, DamageToCause, OwnerController, this, UDamageType::StaticClass());
+			UGameplayStatics::ApplyDamage(OtherActor, DamageToCause, ShooterController, this, UDamageType::StaticClass());
 		}
 	}
 

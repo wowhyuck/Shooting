@@ -25,10 +25,10 @@ protected:
 
 	/* 총알 관련 변수 */
 	UPROPERTY(EditAnywhere)
-	float Damage = 20.f;
+	float Damage;
 
 	UPROPERTY(EditAnywhere)
-	float HeadDamage = 30.f;
+	float HeadDamage;
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* ImpactParticles;
@@ -48,4 +48,8 @@ private:
 	class UParticleSystem* Tracer;
 
 	class UParticleSystemComponent* TracerComponent;
+
+public:
+	FORCEINLINE float GetDamage() const { return Damage; }
+	FORCEINLINE void SetDamage(float DamageAmount) { Damage = DamageAmount; }
 };
