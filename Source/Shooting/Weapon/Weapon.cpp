@@ -28,6 +28,10 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetDamage(Damage + DamagePerLevel * (WeaponLevel - 1));
+	MagCapacity += (MagCapacityPerLevel * (WeaponLevel - 1));
+	Ammo = MagCapacity;
 }
 
 void AWeapon::OnConstruction(const FTransform& Transform)
@@ -64,9 +68,9 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			EquipSound = WeaponDataRow->EquipSound;
 			SetDamage(WeaponDataRow->Damage);
 			MagCapacity = WeaponDataRow->MagCapacity;
-			Ammo = WeaponDataRow->Ammo;
 			DamagePerLevel = WeaponDataRow->DamagePerLevel;
 			MagCapacityPerLevel = WeaponDataRow->MagCapacityPerLevel;
+			Ammo = WeaponDataRow->Ammo;
 		}
 	}
 }

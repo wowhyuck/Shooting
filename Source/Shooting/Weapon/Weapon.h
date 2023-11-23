@@ -154,6 +154,7 @@ private:
 	int32 MagCapacity;
 
 	/* 레벨 관련 변수 */
+	UPROPERTY(EditAnywhere)
 	int32 WeaponLevel = 1;
 
 	float DamagePerLevel;
