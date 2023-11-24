@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Shooting/ShootingTypes/TurningInPlace.h"
 #include "Shooting/ShootingTypes/CombatState.h"
+#include "Components/TimelineComponent.h"
 #include "ShooterCharacter.generated.h"
 
 UCLASS()
@@ -124,6 +125,24 @@ private:
 
 	// 죽기 여부
 	bool bDead = false;
+
+	/* Dissolve 효과 */
+	UPROPERTY(VisibleAnywhere)
+	UTimelineComponent* DissolveTimeline;
+	FOnTimelineFloat DissolveTrack;
+
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* DissolveCurve;
+
+	UPROPERTY(VisibleAnywhere)
+	UMaterialInstanceDynamic* DynamicDissolveMaterialInstance;		// 런타임 때 바꿀 수 있는 Dynamic Instance
+
+	UPROPERTY(EditAnywhere)
+	UMaterialInstance* DissolveMaterialInstance;		// Dynamic material instance와 함께 사용할 블루프린트에서 세팅된 Material Instance
+
+	UFUNCTION()
+	void UpdateDissolveMaterial(float DissolveValue);
+	void StartDissolve();
 
 public:	
 	bool IsWeaponEquipped();

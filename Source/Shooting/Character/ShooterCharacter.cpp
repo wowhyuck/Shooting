@@ -44,6 +44,8 @@ AShooterCharacter::AShooterCharacter()
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
 
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;		// 회전 상태 설정
+
+	DissolveTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DissolveTimelineComponent"));
 }
 
 void AShooterCharacter::BeginPlay()
@@ -365,6 +367,15 @@ void AShooterCharacter::Die()
 {
 	bDead = true;
 	PlayDieMontage();
+
+	if (DissolveMaterialInstance)
+	{
+		DynamicDissolveMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicDissolveMaterialInstance);
+		DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("Dissolve"), 0.55f);
+		DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("Glow"), 20.f);
+	}
+	StartDissolve();
 }
 
 void AShooterCharacter::FinishDeath()
@@ -415,6 +426,24 @@ void AShooterCharacter::SpawnDefaultWeapon()
 				Combat->EquipSecondaryWeapon(SecondaryWeapon);
 			}
 		}
+	}
+}
+
+void AShooterCharacter::UpdateDissolveMaterial(float DissolveValue)
+{
+	if (DynamicDissolveMaterialInstance)
+	{
+		DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("Dissolve"), DissolveValue);
+	}
+}
+
+void AShooterCharacter::StartDissolve()
+{
+	DissolveTrack.BindDynamic(this, &AShooterCharacter::UpdateDissolveMaterial);
+	if (DissolveCurve && DissolveTimeline)
+	{
+		DissolveTimeline->AddInterpFloat(DissolveCurve, DissolveTrack);
+		DissolveTimeline->Play();
 	}
 }
 
