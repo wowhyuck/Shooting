@@ -22,10 +22,10 @@ void UBuffComponent::Heal(float HealAmount)
 	Character->UpdateHUDHealth();
 }
 
-//void UBuffComponent::TakeGold(int32 GoldAmount)
-//{
-//	Character->SetGold(FMath::Clamp(Character->GetGold() + GoldAmount, 0, Character->GetMaxGold()));
-//}
+void UBuffComponent::TakeGold(int32 GoldAmount)
+{
+	Character->SetGold(FMath::Clamp(Character->GetGold() + GoldAmount, 0, Character->GetMaxGold()));
+}
 
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

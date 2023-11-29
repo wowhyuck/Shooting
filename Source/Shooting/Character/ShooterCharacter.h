@@ -124,6 +124,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float Health = 100.f;
 
+	/* 플레이어 골드 */
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	int32 MaxGold = 1000;
+
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	int32 Gold = 0;
+
 	/* Weapons */
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> DefaultWeaponClass;
@@ -164,6 +171,9 @@ public:
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE void SetHealth(float HealthAmount) { Health = HealthAmount; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+	FORCEINLINE float GetGold() const { return Gold; }
+	FORCEINLINE void SetGold(float GoldAmount) { Gold = GoldAmount; }
+	FORCEINLINE float GetMaxGold() const { return MaxGold; }
 	ECombatState GetCombatState() const;
 	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }

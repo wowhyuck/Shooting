@@ -16,7 +16,7 @@ public:
 	UBuffComponent();
 	friend class AShooterCharacter;
 	void Heal(float HealAmount);
-	//void TakeGold(int32 GoldAmount);
+	void TakeGold(int32 GoldAmount);
 
 protected:
 	virtual void BeginPlay() override;
