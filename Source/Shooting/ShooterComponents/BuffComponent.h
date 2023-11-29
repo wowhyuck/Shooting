@@ -15,7 +15,7 @@ class SHOOTING_API UBuffComponent : public UActorComponent
 public:
 	UBuffComponent();
 	friend class AShooterCharacter;
-	//void Heal(float HealAmount);
+	void Heal(float HealAmount);
 	//void TakeGold(int32 GoldAmount);
 
 protected:

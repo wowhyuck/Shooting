@@ -33,11 +33,17 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowSniperScopeWidget(bool bShowScope);
 
+	/* HUD 업데이트 함수 */
+	void UpdateHUDHealth();
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USoundCue* MeleeImpactSound;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class AWeapon* StartingWeapon;
 
 	/* 캐릭터 이동 & 회전 함수 */
 	virtual void Jump() override;
@@ -67,7 +73,6 @@ protected:
 	void FinishDeath();
 
 	/* HUD 업데이트 함수 */
-	void UpdateHUDHealth();
 	void UpdateHUDAmmo();
 
 	// 기본 무기 장착 함수
@@ -85,6 +90,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCombatComponent* Combat;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UBuffComponent* Buff;
 
 	// AimOffset 관련 변수
 	float AO_Yaw;
@@ -154,6 +162,7 @@ public:
 	FVector GetHitTarget() const;
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE float GetHealth() const { return Health; }
+	FORCEINLINE void SetHealth(float HealthAmount) { Health = HealthAmount; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 	ECombatState GetCombatState() const;
 	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
@@ -161,4 +170,5 @@ public:
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
 	FORCEINLINE bool IsDead() const { return bDead; }
 	FORCEINLINE USoundCue* GetMeleeImpactSound() const { return MeleeImpactSound; }
+	FORCEINLINE UBuffComponent* GetBuff() const { return Buff; }
 }; 

@@ -2,33 +2,32 @@
 
 
 #include "BuffComponent.h"
+#include "Shooting/Character/ShooterCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-// Sets default values for this component's properties
+
 UBuffComponent::UBuffComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
-
-// Called when the game starts
 void UBuffComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
+void UBuffComponent::Heal(float HealAmount)
+{
+	Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealAmount, 0.f, Character->GetMaxHealth()));
+	Character->UpdateHUDHealth();
+}
 
-// Called every frame
+//void UBuffComponent::TakeGold(int32 GoldAmount)
+//{
+//	Character->SetGold(FMath::Clamp(Character->GetGold() + GoldAmount, 0, Character->GetMaxGold()));
+//}
+
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
-

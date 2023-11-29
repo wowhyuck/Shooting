@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Shooting/ShooterComponents/CombatComponent.h"
+#include "Shooting/ShooterComponents/BuffComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -37,6 +38,7 @@ AShooterCharacter::AShooterCharacter()
 
 	// CombatComponent 생성
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));	
+	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 
 	/* 충돌 */
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
@@ -51,6 +53,8 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ShooterPlayerController = Cast<AShooterPlayerController>(Controller);
 
 	OnTakeAnyDamage.AddDynamic(this, &AShooterCharacter::ReceiveDamage);		// 데미지를 받을 때 ReceiveDamage 함수 호출
 
@@ -96,6 +100,11 @@ void AShooterCharacter::PostInitializeComponents()
 	if (Combat)
 	{
 		Combat->Character = this;
+	}
+	// BuffComponent
+	if (Buff)
+	{
+		Buff->Character = this;
 	}
 }
 
@@ -413,7 +422,7 @@ void AShooterCharacter::SpawnDefaultWeapon()
 	UWorld* World = GetWorld();
 	if (ShootingGameMode && World && DefaultWeaponClass)		// TODO : 캐릭터 제거가 구현될 때 !bElimmed 추가
 	{
-		AWeapon* StartingWeapon = World->SpawnActor<AWeapon>(DefaultWeaponClass);
+		StartingWeapon = World->SpawnActor<AWeapon>(DefaultWeaponClass);
 		if (Combat)
 		{
 			Combat->EquipPrimaryWeapon(StartingWeapon);
