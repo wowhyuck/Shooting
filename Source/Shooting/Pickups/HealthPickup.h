@@ -35,5 +35,5 @@ private:
 	class UNiagaraSystem* PickupEffect;
 
 	UPROPERTY(EditAnywhere)
-	float HealAmount;
+	float HealAmount = 20.f;
 };

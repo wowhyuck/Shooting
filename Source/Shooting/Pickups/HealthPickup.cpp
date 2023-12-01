@@ -6,13 +6,14 @@
 #include "Shooting/ShooterComponents/BuffComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Math/UnrealMathUtility.h"
 
 
-AHealthPickup::AHealthPickup() :
-	HealAmount(20.f)
+AHealthPickup::AHealthPickup()
 {
 	PickupEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("PickupEffectComponent"));
 	PickupEffectComponent->SetupAttachment(RootComponent);
+	HealAmount = (int32)FMath::RandRange(15.f, 20.f);
 }
 
 void AHealthPickup::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
