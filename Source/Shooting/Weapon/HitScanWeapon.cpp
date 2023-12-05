@@ -6,7 +6,6 @@
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/Enemy/Enemy.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
 #include "WeaponType.h"
@@ -26,40 +25,47 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	{
 		FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 		FVector Start = SocketTransform.GetLocation();
-
-		FHitResult FireHit;
-		WeaponTraceHit(Start, HitTarget, FireHit);
-
-		AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+		
+		TArray<FHitResult> FireHits;
+		AEnemy* HitEnemy;
 		HeadDamage = GetDamage() * 2.0f;
 
-		if (HitEnemy)
+		if (GetWeaponType() == EWeaponType::EWT_SniperRifle)
 		{
-			// 적이 맞은 곳이 head일 때 true, 아닐 때 false
-			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadDamage : GetDamage();
-			UGameplayStatics::ApplyDamage(
-				HitEnemy,
-				DamageToCause,
-				InstigatorController,
-				this,
-				UDamageType::StaticClass());
-		}
+			SniperRifleTraceHit(Start, HitTarget, FireHits);
+			
+			for (const auto FireHit : FireHits)
+			{
+				HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+				if (HitEnemy)
+				{
+					// 적이 맞은 곳이 head일 때 true, 아닐 때 false
+					const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadDamage : GetDamage();
+					UGameplayStatics::ApplyDamage(
+						HitEnemy,
+						DamageToCause,
+						InstigatorController,
+						this,
+						UDamageType::StaticClass());
+				}
 
-		if (ImpactParticles)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				ImpactParticles,
-				FireHit.ImpactPoint,
-				FireHit.ImpactNormal.Rotation());
-		}
+				if (ImpactParticles)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(
+						GetWorld(),
+						ImpactParticles,
+						FireHit.ImpactPoint,
+						FireHit.ImpactNormal.Rotation());
+				}
 
-		if (HitSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(
-				this,
-				HitSound,
-				FireHit.ImpactPoint);
+				if (HitSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(
+						this,
+						HitSound,
+						FireHit.ImpactPoint);
+				}
+			}
 		}
 
 		if (MuzzleFlash)
@@ -80,36 +86,20 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	}
 }
 
-FVector AHitScanWeapon::TraceEndWithScatter(const FVector& TraceStart, const FVector& HitTarget)
-{
-	FVector ToTargetNormalized = (HitTarget - TraceStart).GetSafeNormal();		// 총알 방향
-	FVector SphereCenter = TraceStart + ToTargetNormalized * DistanceToSphere;		// 총 퍼짐 범위(구)
-	FVector RandVec = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(0.f, SphereRadius);		// 구를 중심으로 무작위 방향
-	FVector EndLoc = SphereCenter + RandVec;		// 구 표면의 무작위 점(무작위 방향에 따른)
-	FVector ToEndLoc = EndLoc - TraceStart;		// 총구부터 무작위 점을 향한 벡터
-
-	return FVector(TraceStart + ToEndLoc * TRACE_LENGTH / ToEndLoc.Size());
-}
-
-void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& HitTarget, FHitResult& OutHit)
+void AHitScanWeapon::SniperRifleTraceHit(const FVector& TraceStart, const FVector& HitTarget, TArray<FHitResult>& OutHits)
 {
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		// bUseScatter = true -> Shotgun, bUseScatter = false -> Sniper Rifle
-		FVector End = bUseScatter ? TraceEndWithScatter(TraceStart, HitTarget) : TraceStart + (HitTarget - TraceStart) * 1.25f;
+		FVector End = TraceStart + (HitTarget - TraceStart) * 1.25f;
 
-		World->LineTraceSingleByChannel(
-			OutHit,
+		World->LineTraceMultiByChannel(
+			OutHits,
 			TraceStart,
 			End,
 			ECollisionChannel::ECC_Visibility);
 
 		FVector BeamEnd = End;
-		if (OutHit.bBlockingHit)
-		{
-			BeamEnd = OutHit.ImpactPoint;
-		}
 		if (BeamParticles)
 		{
 			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(

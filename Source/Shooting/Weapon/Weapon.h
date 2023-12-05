@@ -104,6 +104,23 @@ protected:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	/* 무기 관련 변수 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString WeaponName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* WeaponIcon;
+
+	/* 탄약 관련 변수 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 MagCapacity;
+
 	/* 무기 장착 상태에 따른 함수 */
 	virtual void OnWeaponStateSet();
 	virtual void OnEquipped();
@@ -133,25 +150,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	EWeaponType WeaponType;
 
-	UPROPERTY(EditAnywhere)
-	FString WeaponName;
-	
-	UPROPERTY(EditAnywhere)
-	UTexture2D* WeaponIcon;
-
 	// 연사 애니메이션
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	class UAnimationAsset* FireAnimation;
-
-	/* 탄약 관련 변수 */
-	UPROPERTY(EditAnywhere)
-	float Damage;
-
-	UPROPERTY(EditAnywhere)
-	int32 Ammo;
-
-	UPROPERTY(EditAnywhere)
-	int32 MagCapacity;
 
 	/* 레벨 관련 변수 */
 	UPROPERTY(EditAnywhere)

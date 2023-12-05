@@ -9,6 +9,7 @@
 #include "Shooting/PlayerController/ShooterPlayerController.h"
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/ShooterComponents/CombatComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AWeapon::AWeapon()

@@ -3,10 +3,12 @@
 
 #include "Shotgun.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Shooting/Character/ShooterCharacter.h"
 #include "Shooting/Enemy/Enemy.h"
 #include "Sound/SoundCue.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 void AShotgun::Fire(const FVector& HitTarget)
@@ -31,7 +33,7 @@ void AShotgun::Fire(const FVector& HitTarget)
 		for (uint32 i = 0; i < NumberOfPellets; i++)
 		{
 			FHitResult FireHit;
-			WeaponTraceHit(Start, HitTarget, FireHit);
+			ShotgunTraceHit(Start, HitTarget, FireHit);
 
 			AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
 
@@ -110,6 +112,51 @@ void AShotgun::Fire(const FVector& HitTarget)
 					InstigatorController,
 					this,
 					UDamageType::StaticClass());
+			}
+		}
+	}
+}
+
+FVector AShotgun::TraceEndWithScatter(const FVector& TraceStart, const FVector& HitTarget)
+{
+	FVector ToTargetNormalized = (HitTarget - TraceStart).GetSafeNormal();		// 총알 방향
+	FVector SphereCenter = TraceStart + ToTargetNormalized * DistanceToSphere;		// 총 퍼짐 범위(구)
+	FVector RandVec = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(0.f, SphereRadius);		// 구를 중심으로 무작위 방향
+	FVector EndLoc = SphereCenter + RandVec;		// 구 표면의 무작위 점(무작위 방향에 따른)
+	FVector ToEndLoc = EndLoc - TraceStart;		// 총구부터 무작위 점을 향한 벡터
+
+	return FVector(TraceStart + ToEndLoc * TRACE_LENGTH / ToEndLoc.Size());
+}
+
+void AShotgun::ShotgunTraceHit(const FVector& TraceStart, const FVector& HitTarget, FHitResult& OutHit)
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FVector End = TraceEndWithScatter(TraceStart, HitTarget);
+
+		World->LineTraceSingleByChannel(
+			OutHit,
+			TraceStart,
+			End,
+			ECollisionChannel::ECC_Visibility);
+
+		FVector BeamEnd = End;
+		if (OutHit.bBlockingHit)
+		{
+			BeamEnd = OutHit.ImpactPoint;
+		}
+		if (BeamParticles)
+		{
+			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
+				World,
+				BeamParticles,
+				TraceStart,
+				FRotator::ZeroRotator,
+				true);
+			if (Beam)
+			{
+				Beam->SetVectorParameter(FName("Target"), BeamEnd);
 			}
 		}
 	}
