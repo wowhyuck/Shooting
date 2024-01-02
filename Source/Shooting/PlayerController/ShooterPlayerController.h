@@ -14,7 +14,7 @@ class SHOOTING_API AShooterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-public:
+public:	
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDWeaponAmmo(int32 Ammo);
 	void SetHUDWeaponName(FString WeaponName);
@@ -36,10 +36,10 @@ protected:
 
 	void CheckMatchState();
 
-private:
+private:	
 	UPROPERTY()
 	class AShooterHUD* ShooterHUD;
-	
+
 	UPROPERTY()
 	class AShootingGameMode* ShootingGameMode;
 

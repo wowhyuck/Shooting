@@ -86,11 +86,12 @@ void AShooterPlayerController::CheckMatchState()
 		LevelStartingTime = GameMode->LevelStartingTime;
 		MatchState = GameMode->GetMatchState();
 
-		ShooterHUD = Cast<AShooterHUD>(GetHUD());
-		if (ShooterHUD && MatchState == MatchState::WaitingToStart)
-		{
-			ShooterHUD->AddAnnouncement();
-		}
+		// TODO : Annoucement관련 HUD 지울 때 같이 지우기
+		//ShooterHUD = Cast<AShooterHUD>(GetHUD());
+		//if (ShooterHUD && MatchState == MatchState::WaitingToStart)
+		//{
+		//	ShooterHUD->AddAnnouncement();
+		//}
 	}
 }
 
