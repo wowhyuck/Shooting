@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "CharacterOverlay.h"
 #include "Announcement.h"
+#include "ResultMenu.h"
 
 
 void AShooterHUD::BeginPlay()
@@ -31,6 +32,17 @@ void AShooterHUD::AddCharacterOverlay()
 	{
 		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
 		CharacterOverlay->AddToViewport();
+	}
+}
+
+void AShooterHUD::AddResultMenu()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+
+	if (PlayerController && CharacterOverlayClass)
+	{
+		ResultMenu = CreateWidget<UResultMenu>(PlayerController, ResultMenuClass);
+		ResultMenu->AddToViewport();
 	}
 }
 

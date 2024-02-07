@@ -219,6 +219,11 @@ void AShooterPlayerController::SetHUDAnnouncementCountdown(float CountdownTime)
 	}
 }
 
+void AShooterPlayerController::SetHUDResultMenu()
+{
+	ShooterHUD->AddResultMenu();
+}
+
 void AShooterPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);

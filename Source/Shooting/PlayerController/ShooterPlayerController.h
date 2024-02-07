@@ -21,6 +21,7 @@ public:
 	void SetHUDWeaponIcon(UTexture2D* WeaponIcon);
 	void SetHUDMatchCountdown(float CountdownTime);
 	void SetHUDAnnouncementCountdown(float CountdownTime);
+	void SetHUDResultMenu();
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void Tick(float DeltaTime) override;
 
@@ -37,7 +38,7 @@ protected:
 	void CheckMatchState();
 
 private:	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class AShooterHUD* ShooterHUD;
 
 	UPROPERTY()

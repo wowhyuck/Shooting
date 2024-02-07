@@ -45,12 +45,17 @@ void AShootingGameMode::Tick(float DeltaTime)
 	}
 	else if (MatchState == MatchState::Cooldown)		// 게임 종료 및 결과
 	{
+		// TODO : hp=0일 때->실패 메뉴, hp>0 && countdowntime <=0일 때->성공 메뉴
+
+		AShooterPlayerController* ShooterPlayer = Cast<AShooterPlayerController>(*(GetWorld()->GetPlayerControllerIterator()));
+		
+		ShooterPlayer->SetHUDResultMenu();
+
 		CountdownTime = CooldownTime + WarmupTime + MatchTime - GetWorld()->GetTimeSeconds() + LevelStartingTime;
 		
-		// TODO : 재시작 버튼을 클릭했을 때 게임 재시작하기
 		if (CountdownTime <= 0.f)
 		{
-			RestartGame();
+			//RestartGame();
 		}
 	}
 }

@@ -44,10 +44,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	TSubclassOf<class UUserWidget> CharacterOverlayClass;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	class UCharacterOverlay* CharacterOverlay;
 
 	void AddCharacterOverlay();
+
+	/* 게임 중 HUD (CharacterOverlay Widget) */
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	TSubclassOf<class UUserWidget> ResultMenuClass;
+
+	UPROPERTY(BlueprintReadWrite)
+	class UResultMenu* ResultMenu;
+
+	void AddResultMenu();
 
 protected:
 	virtual void BeginPlay() override;
