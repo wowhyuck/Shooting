@@ -65,6 +65,7 @@ void AShooterPlayerController::PollInt()
 			{
 				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
+				if (bInitializeGold) SetHUDGold(HUDGold);
 				if (bInitializeWeapon)
 				{
 					SetHUDWeaponName(HUDWeaponName);
@@ -181,10 +182,16 @@ void AShooterPlayerController::SetHUDGold(int32 Gold)
 	bool bHUDValid = ShooterHUD &&
 		ShooterHUD->CharacterOverlay &&
 		ShooterHUD->CharacterOverlay->Gold;
+	
 	if (bHUDValid)
 	{
 		FString GoldText = FString::Printf(TEXT("%d"), Gold);
 		ShooterHUD->CharacterOverlay->Gold->SetText(FText::FromString(GoldText));
+	}
+	else
+	{
+		bInitializeGold = true;
+		HUDGold = Gold;
 	}
 }
 

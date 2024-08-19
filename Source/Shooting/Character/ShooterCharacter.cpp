@@ -424,7 +424,6 @@ void AShooterCharacter::UpdateHUDGold()
 	{
 		ShooterPlayerController->SetHUDGold(Gold);
 	}
-
 }
 
 void AShooterCharacter::SpawnDefaultWeapon()

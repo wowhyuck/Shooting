@@ -67,4 +67,7 @@ private:
 	FString HUDWeaponName;
 	class UTexture2D* HUDWeaponIcon;
 	bool bInitializeWeapon = false;
+
+	int32 HUDGold;
+	bool bInitializeGold = false;
 };
