@@ -174,6 +174,20 @@ void AShooterPlayerController::SetHUDWeaponIcon(UTexture2D* WeaponIcon)
 	}
 }
 
+void AShooterPlayerController::SetHUDGold(int32 Gold)
+{
+	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
+
+	bool bHUDValid = ShooterHUD &&
+		ShooterHUD->CharacterOverlay &&
+		ShooterHUD->CharacterOverlay->Gold;
+	if (bHUDValid)
+	{
+		FString GoldText = FString::Printf(TEXT("%d"), Gold);
+		ShooterHUD->CharacterOverlay->Gold->SetText(FText::FromString(GoldText));
+	}
+}
+
 void AShooterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 {
 	ShooterHUD = ShooterHUD == nullptr ? Cast<AShooterHUD>(GetHUD()) : ShooterHUD;
@@ -246,6 +260,10 @@ void AShooterPlayerController::OnMatchStateSet(FName State)
 	else if (MatchState == MatchState::Cooldown)
 	{
 		HandleCooldown();
+	}
+	else if (MatchState == MatchState::WaitingPostMatch)
+	{
+
 	}
 }
 

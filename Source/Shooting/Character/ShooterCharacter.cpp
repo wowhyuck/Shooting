@@ -63,6 +63,7 @@ void AShooterCharacter::BeginPlay()
 	/* HUD 불러오기 */
 	UpdateHUDAmmo();
 	UpdateHUDHealth();
+	UpdateHUDGold();
 }
 
 void AShooterCharacter::Tick(float DeltaTime)
@@ -414,6 +415,16 @@ void AShooterCharacter::UpdateHUDAmmo()
 	{
 		ShooterPlayerController->SetHUDWeaponAmmo(Combat->EquippedWeapon->GetAmmo());
 	}
+}
+
+void AShooterCharacter::UpdateHUDGold()
+{
+	ShooterPlayerController = ShooterPlayerController == nullptr ? Cast<AShooterPlayerController>(Controller) : ShooterPlayerController;
+	if (ShooterPlayerController)
+	{
+		ShooterPlayerController->SetHUDGold(Gold);
+	}
+
 }
 
 void AShooterCharacter::SpawnDefaultWeapon()

@@ -74,6 +74,7 @@ protected:
 
 	/* HUD 업데이트 함수 */
 	void UpdateHUDAmmo();
+	void UpdateHUDGold();
 
 	// 기본 무기 장착 함수
 	void SpawnDefaultWeapon();

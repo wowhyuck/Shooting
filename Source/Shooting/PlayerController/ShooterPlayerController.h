@@ -19,6 +19,7 @@ public:
 	void SetHUDWeaponAmmo(int32 Ammo);
 	void SetHUDWeaponName(FString WeaponName);
 	void SetHUDWeaponIcon(UTexture2D* WeaponIcon);
+	void SetHUDGold(int32 Gold);
 	void SetHUDMatchCountdown(float CountdownTime);
 	void SetHUDAnnouncementCountdown(float CountdownTime);
 	void SetHUDResultMenu();
